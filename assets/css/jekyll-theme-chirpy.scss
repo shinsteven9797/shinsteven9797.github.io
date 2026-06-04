@@ -119,9 +119,16 @@ html[data-mode="dark"] body::before {
     border-left: none !important;
     border-right: 1px solid var(--sidebar-border-color) !important;
     width: var(--sidebar-width) !important;
-    padding-left: 1.5rem !important;
-    padding-right: 1.5rem !important;
+    padding-left: 1.25rem !important;
+    padding-right: 1.25rem !important;
     background: var(--sidebar-bg) !important;
+    overflow-y: hidden !important; /* 스크롤바 제거 */
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+  }
+  #sidebar::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
   }
   
   #main-wrapper {
@@ -146,16 +153,16 @@ body:has(#post-wrapper) {
   }
 }
 /* ─────────────────────────────────────────────────────────────────────────
-   5. 아바타 & 사이드바 세부 디자인
+   5. 아바타 & 사이드바 세부 디자인 (콤팩트 축소)
    ───────────────────────────────────────────────────────────────────────── */
 #sidebar #avatar {
   border-radius: 50% !important;
   border: 1px solid var(--sidebar-border-color) !important;
   box-shadow: none !important;
-  width: 72px !important;
-  height: 72px !important;
+  width: 64px !important; /* 72px -> 64px 축소 */
+  height: 64px !important;
   transition: transform 0.3s ease;
-  margin-top: 2rem !important;
+  margin-top: 1rem !important; /* 2rem -> 1rem 축소 */
 }
 #sidebar #avatar:hover {
   transform: scale(1.05);
@@ -164,25 +171,25 @@ body:has(#post-wrapper) {
 #sidebar .site-title a {
   color: var(--text-color) !important;
   font-weight: 700 !important;
-  font-size: 1.3rem !important;
+  font-size: 1.05rem !important; /* 1.3rem -> 1.05rem 축소 */
   text-shadow: none !important;
   letter-spacing: -0.02em;
 }
 
 #sidebar .site-subtitle {
   color: var(--text-muted-color) !important;
-  font-size: 0.9rem !important;
+  font-size: 0.8rem !important; /* 0.9rem -> 0.8rem 축소 */
   font-family: var(--font-body) !important;
   font-weight: 400 !important;
-  margin-top: 0.5rem !important;
-  line-height: 1.4 !important;
+  margin-top: 0.25rem !important; /* 0.5rem -> 0.25rem 축소 */
+  line-height: 1.3 !important;
 }
 
 #sidebar .nav-item {
   background: transparent !important;
   border-radius: 6px !important;
   transition: background 0.15s ease;
-  margin: 0.2rem 0 !important;
+  margin: 0.1rem 0 !important; /* 0.2rem -> 0.1rem 축소 */
   padding: 0 0.5rem !important;
 }
 
@@ -196,7 +203,7 @@ body:has(#post-wrapper) {
   font-family: var(--font-body) !important;
   font-weight: 500 !important;
   border-left: none !important;
-  padding: 0.5rem 0 !important;
+  padding: 0.35rem 0 !important; /* 0.5rem -> 0.35rem 축소 */
   transition: color 0.15s ease;
 }
 
