@@ -2,3 +2,13 @@
 layout: home
 # Index page
 ---
+
+<script>
+  (function() {
+    // Force dark mode on first visit if no preference is stored
+    if (!localStorage.getItem('mode')) {
+      localStorage.setItem('mode', 'dark');
+      document.documentElement.setAttribute('data-mode', 'dark');
+    }
+  })();
+</script>

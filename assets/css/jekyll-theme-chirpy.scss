@@ -23,7 +23,7 @@
 :root, html:not([data-mode="dark"]), html[data-mode="light"] {
   --bg-base:               #ffffff;
   --body-bg:               #ffffff;
-  --sidebar-bg:            #fafafa; /* 미디엄 우측 프로필 영역의 은은한 밝은 회색 */
+  --sidebar-bg:            #ffffff; /* 미디엄 라이트 모드 1톤 */
   --sidebar-border-color:  #f2f2f2;
   --main-border-color:     #f2f2f2;
 
@@ -55,8 +55,8 @@
    2. 미디엄(Medium) 다크 모드 컬러 시스템
    ───────────────────────────────────────────────────────────────────────── */
 html[data-mode="dark"] {
-  --bg-base:               #0a0b0d;
-  --body-bg:               #0a0b0d;
+  --bg-base:               #07080a; /* 사이버 다크 1톤 */
+  --body-bg:               #07080a;
   --bg-glow-indigo:        hsl(243, 75%, 15%);
   --sidebar-bg:            #07080a;
   --sidebar-border-color:  rgba(255, 255, 255, 0.08);
@@ -95,9 +95,9 @@ body {
   color: var(--text-color) !important;
 }
 
-/* 다크 모드일 때만 원래의 딥스페이스 다크 그라데이션 및 노이즈 텍스처 활성화 */
+/* 다크 모드일 때 딥스페이스 플랫 단색 및 노이즈 텍스처 활성화 */
 html[data-mode="dark"] body {
-  background: #0a0b0d radial-gradient(circle at 50% 50%, var(--bg-glow-indigo) 0%, #0a0b0d 100%) no-repeat fixed !important;
+  background: var(--bg-base) !important;
 }
 
 html[data-mode="dark"] body::before {
@@ -368,3 +368,69 @@ body:has(#post-wrapper) {
 #panel-wrapper {
   display: none !important;
 }
+
+/* ─────────────────────────────────────────────────────────────────────────
+   9. 온/오프(ON/OFF) 스타일 테마 토글 스위치 (메뉴바 하단)
+   ───────────────────────────────────────────────────────────────────────── */
+/* 디폴트 조절 아이콘 숨김 */
+#mode-toggle i {
+  display: none !important;
+}
+
+#mode-toggle {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-decoration: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  border: none !important;
+  margin-top: 1.5rem !important;
+  width: 100% !important;
+  border-top: 1px solid var(--sidebar-border-color) !important;
+  padding: 1rem 0 !important;
+}
+
+/* FontAwesome 토글 스위치 아이콘 생성 */
+#mode-toggle::after {
+  font-family: "Font Awesome 5 Free" !important;
+  font-weight: 900 !important;
+  font-size: 1.8rem !important;
+  vertical-align: middle !important;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* 라이트 모드 (OFF 상태 - 배경색이 화이트) */
+html:not([data-mode="dark"]) #mode-toggle::after {
+  content: "\f204" !important; /* fa-toggle-off */
+  color: #a0a0a0 !important;
+}
+
+/* 다크 모드 (ON 상태 - 배경색이 다크) */
+html[data-mode="dark"] #mode-toggle::after {
+  content: "\f205" !important; /* fa-toggle-on */
+  color: var(--accent) !important; /* 미디엄 그린 ON 상태 */
+}
+
+/* 스위치 옆에 상태 텍스트(ON/OFF) 노출 */
+#mode-toggle::before {
+  font-family: var(--font-body) !important;
+  font-size: 0.85rem !important;
+  font-weight: 700 !important;
+  margin-right: 0.6rem !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  transition: color 0.25s ease !important;
+}
+
+html:not([data-mode="dark"]) #mode-toggle::before {
+  content: "Light" !important;
+  color: #a0a0a0 !important;
+}
+
+html[data-mode="dark"] #mode-toggle::before {
+  content: "Dark" !important;
+  color: var(--accent) !important;
+}
+
