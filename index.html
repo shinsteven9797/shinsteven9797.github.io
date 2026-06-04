@@ -5,10 +5,10 @@ layout: home
 
 <script>
   (function() {
-    // Force dark mode on first visit if no preference is stored
+    // Force light mode on first visit if no preference is stored
     if (!localStorage.getItem('mode')) {
-      localStorage.setItem('mode', 'dark');
-      document.documentElement.setAttribute('data-mode', 'dark');
+      localStorage.setItem('mode', 'light');
+      document.documentElement.setAttribute('data-mode', 'light');
     }
   })();
 </script>
