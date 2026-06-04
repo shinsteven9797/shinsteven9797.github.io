@@ -11,219 +11,353 @@
   --font-body: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
   --font-heading: 'Montserrat', 'Pretendard', sans-serif;
   --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+  --font-serif: Georgia, Cambria, "Times New Roman", Times, serif;
+
+  /* 사이드바 너비 */
+  --sidebar-width: 320px;
 }
 
-/* 60-30-10 사이버 다크 네온 시안 테마 (Dark Mode) */
+/* ─────────────────────────────────────────────────────────────────────────
+   1. 미디엄(Medium) 라이트 모드 컬러 시스템 (기본값)
+   ───────────────────────────────────────────────────────────────────────── */
+:root, html:not([data-mode="dark"]), html[data-mode="light"] {
+  --bg-base:               #ffffff;
+  --body-bg:               #ffffff;
+  --sidebar-bg:            #fafafa; /* 미디엄 우측 프로필 영역의 은은한 밝은 회색 */
+  --sidebar-border-color:  #f2f2f2;
+  --main-border-color:     #f2f2f2;
+
+  --accent:                #1a8917; /* 미디엄 시그니처 그린 */
+  --accent-glow:           rgba(26, 137, 23, 0.15);
+  --accent-hover:          #156f12;
+  --accent-danger:         #d32f2f;
+  --accent-success:        #1a8917;
+
+  --link-color:            #242424;
+  --link-underline-color:  transparent;
+  --text-color:            #242424;
+  --text-muted-color:      #6b6b6b;
+
+  --btn-border-color:      #e6e6e6;
+  --btn-hover-bg:          #f2f2f2;
+  --btn-active-bg:         #e6e6e6;
+
+  --card-bg:               transparent;
+  --card-border-color:     #f2f2f2;
+  
+  --blockquote-border-color: #1a8917;
+  --code-bg:               #f2f2f2;
+  --code-color:            #c2185b;
+  --tb-border-color:       #f2f2f2;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   2. 미디엄(Medium) 다크 모드 컬러 시스템
+   ───────────────────────────────────────────────────────────────────────── */
 html[data-mode="dark"] {
-  /* ── 60% 배경 레이어 (딥스페이스 다크) ── */
-  --bg-base:          #0a0b0d;  /* 메인 배경 */
-  --bg-deep:          #07080a;  /* 더 깊은 공간감 */
-  --bg-glow-indigo:   hsl(243, 75%, 15%);  /* 배경 radial 광원 */
+  --bg-base:               #0f0f0f;
+  --body-bg:               #0f0f0f;
+  --sidebar-bg:            #161616;
+  --sidebar-border-color:  #242424;
+  --main-border-color:     #242424;
 
-  --body-bg:          #0a0b0d;
-  --sidebar-bg:       #07080a;
-  --sidebar-border-color: rgba(255, 255, 255, 0.08);
-  --main-border-color: rgba(255, 255, 255, 0.08);
+  --accent:                #24a024; /* 다크모드 대비 최적화 그린 */
+  --accent-glow:           rgba(36, 160, 36, 0.2);
+  --accent-hover:          #2fc02f;
+  --accent-danger:         #cf6679;
+  --accent-success:        #24a024;
 
-  /* ── 30% 글래스 레이어 (콘텐츠 카드) ── */
-  --glass-bg:         rgba(255, 255, 255, 0.04);
-  --glass-border:     rgba(255, 255, 255, 0.08);
-  --glass-blur:       blur(16px);
-  --glass-modal-blur: blur(24px);
+  --link-color:            #e6e6e6;
+  --link-underline-color:  transparent;
+  --text-color:            #e6e6e6;
+  --text-muted-color:      #a0a0a0;
 
-  --card-bg:          var(--glass-bg);
-  --card-border-color: var(--glass-border);
-  --card-header-bg:   rgba(255, 255, 255, 0.02);
+  --btn-border-color:      #2c2c2c;
+  --btn-hover-bg:          #1e1e1e;
+  --btn-active-bg:         #2c2c2c;
 
-  /* ── 10% 강조 레이어 (네온 사이버 시안) ── */
-  --accent:           #06b6d4;  /* 사이버 시안 */
-  --accent-glow:      rgba(6, 182, 212, 0.4);
-  --accent-hover:     #22d3ee;
-  --accent-danger:    #f43f5e;  /* 경고 */
-  --accent-success:   #10b981;  /* 성공 */
-
-  --link-color:       #06b6d4;
-  --link-underline-color: rgba(6, 182, 212, 0.4);
-  --text-color:       rgba(255, 255, 255, 0.92);
-  --text-muted-color: rgba(255, 255, 255, 0.55);
-
-  /* 버튼 및 스크롤바 등 UI 변수 오버라이드 */
-  --btn-border-color: rgba(255, 255, 255, 0.12);
-  --btn-hover-bg:     rgba(6, 182, 212, 0.10);
-  --btn-active-bg:    rgba(6, 182, 212, 0.20);
-
-  --prompt-tip-bg:    rgba(16, 185, 129, 0.08);
-  --prompt-info-bg:   rgba(6, 182, 212, 0.08);
-  --prompt-warning-bg: rgba(245, 158, 11, 0.08);
-  --prompt-danger-bg:  rgba(244, 63, 94, 0.08);
-
-  --blockquote-border-color: var(--accent);
-  --code-bg:          rgba(255, 255, 255, 0.03);
-  --code-color:       #22d3ee;
-  --tb-border-color:  rgba(255, 255, 255, 0.08);
+  --card-bg:               transparent;
+  --card-border-color:     #242424;
+  
+  --blockquote-border-color: #24a024;
+  --code-bg:               #1a1a1a;
+  --code-color:            #f48fb1;
+  --tb-border-color:       #242424;
 }
 
-/* ── 배경 그래인 텍스처 & 인디고 광원 ── */
+/* ─────────────────────────────────────────────────────────────────────────
+   3. 글로벌 리셋 & 레이아웃 오버라이드
+   ───────────────────────────────────────────────────────────────────────── */
 body {
-  background: #0a0b0d radial-gradient(circle at 50% 50%, var(--bg-glow-indigo) 0%, #0a0b0d 100%) no-repeat fixed !important;
+  background: var(--bg-base) !important;
   font-family: var(--font-body) !important;
+  color: var(--text-color) !important;
 }
 
 body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-  pointer-events: none;
-  z-index: 9999;
-  opacity: 0.035;
+  content: none !important; /* 사이버펑크 텍스처 비활성화 */
+  display: none !important;
 }
 
-/* ── 타이포그래피 적용 ── */
-h1, h2, h3, h4, h5, h6,
-.site-title, .site-subtitle,
-#sidebar #avatar, .nav-link,
-.post-title, .btn {
-  font-family: var(--font-heading) !important;
+/* 데스크톱 환경에서 사이드바 우측 배치 */
+@media (min-width: 850px) {
+  #sidebar {
+    left: auto !important;
+    right: 0 !important;
+    border-right: none !important;
+    border-left: 1px solid var(--sidebar-border-color) !important;
+    width: var(--sidebar-width) !important;
+    padding-left: 2rem !important;
+    padding-right: 2rem !important;
+    background: var(--sidebar-bg) !important;
+  }
+  
+  #main-wrapper {
+    margin-left: 0 !important;
+    margin-right: var(--sidebar-width) !important;
+    padding-right: 2rem !important;
+  }
+  
+  #topbar-wrapper {
+    left: 0 !important;
+    right: var(--sidebar-width) !important;
+    width: auto !important;
+    background: var(--bg-base) !important;
+    border-bottom: 1px solid var(--main-border-color) !important;
+  }
 }
 
-code, pre, .hash-value, kbd, samp, .post-meta {
-  font-family: var(--font-mono) !important;
+/* ─────────────────────────────────────────────────────────────────────────
+   4. 개별 글 상세 페이지 (Single Post View - 1단 몰입형 레이아웃)
+   ───────────────────────────────────────────────────────────────────────── */
+/* 본문 글 상세 페이지가 활성화되면 전체 1단 중앙 정렬 뷰로 자동 전환 */
+body:has(#post-wrapper) {
+  #sidebar {
+    display: none !important;
+  }
+  #main-wrapper {
+    margin-left: auto !important;
+    margin-right: auto !important;
+    max-width: 740px !important;
+    width: 100% !important;
+    padding-left: 1.5rem !important;
+    padding-right: 1.5rem !important;
+    float: none !important;
+  }
+  #topbar-wrapper {
+    display: none !important; /* 디폴트 네비게이션 숨김 */
+  }
+  #panel-wrapper {
+    display: none !important; /* 우측 관련글 패널 숨김 */
+  }
 }
 
-/* ── 글래스모피즘 아키텍처 ── */
-.post-preview,
-.card,
-#search-result-wrapper,
-.panel-block,
-blockquote,
-pre,
-#toc-wrapper {
-  background: var(--glass-bg) !important;
-  border: 1px solid var(--glass-border) !important;
-  backdrop-filter: var(--glass-blur) !important;
-  -webkit-backdrop-filter: var(--glass-blur) !important;
-  border-radius: 16px !important;
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3) !important;
-  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+/* ─────────────────────────────────────────────────────────────────────────
+   5. 아바타 & 사이드바 세부 디자인
+   ───────────────────────────────────────────────────────────────────────── */
+#sidebar #avatar {
+  border-radius: 50% !important;
+  border: 1px solid var(--sidebar-border-color) !important;
+  box-shadow: none !important;
+  width: 88px !important;
+  height: 88px !important;
+  transition: transform 0.3s ease;
+  margin-top: 2rem !important;
+}
+#sidebar #avatar:hover {
+  transform: scale(1.05);
 }
 
-.post-preview:hover,
-.card:hover,
-.panel-block:hover {
-  transform: translateY(-4px) !important;
-  border-color: var(--accent) !important;
-  box-shadow: 0 12px 40px 0 rgba(6, 182, 212, 0.25) !important;
+#sidebar .site-title a {
+  color: var(--text-color) !important;
+  font-weight: 700 !important;
+  font-size: 1.3rem !important;
+  text-shadow: none !important;
+  letter-spacing: -0.02em;
 }
 
-/* 모달 및 중요 요철 레이어 */
-.glass-modal {
-  background: rgba(10, 11, 13, 0.85) !important;
-  backdrop-filter: var(--glass-modal-blur) !important;
-  -webkit-backdrop-filter: var(--glass-modal-blur) !important;
-  border: 1px solid rgba(255, 255, 255, 0.15) !important;
-  border-radius: 20px !important;
+#sidebar .site-subtitle {
+  color: var(--text-muted-color) !important;
+  font-size: 0.9rem !important;
+  font-family: var(--font-body) !important;
+  font-weight: 400 !important;
+  margin-top: 0.5rem !important;
+  line-height: 1.4 !important;
 }
 
-/* ── 애니메이션 & 마이크로인터랙션 ── */
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(24px); }
-  to   { opacity: 1; transform: translateY(0); }
+#sidebar .nav-link {
+  color: var(--text-color) !important;
+  font-family: var(--font-body) !important;
+  font-weight: 500 !important;
+  border-left: none !important;
+  padding: 0.6rem 0 !important;
+  transition: color 0.15s ease;
 }
-
-.fade-up, .post-preview, #post-list > article, .post {
-  opacity: 0;
-  animation: fadeUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards !important;
+#sidebar .nav-link:hover, #sidebar .nav-link.active {
+  color: var(--accent) !important;
+  background: transparent !important;
+  text-decoration: none !important;
 }
-
-/* 버튼 Ripple 효과 */
-.btn, .sidebar-btn, #sidebar a {
-  position: relative;
-  overflow: hidden;
+#sidebar .nav-link i {
+  color: var(--text-muted-color) !important;
+  margin-right: 0.75rem !important;
 }
-.btn::after, .sidebar-btn::after, #sidebar a::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-.btn:active::after, .sidebar-btn:active::after, #sidebar a:active::after {
-  opacity: 1;
-}
-
-/* 네온 글로우 텍스트 */
-.glow-text, .site-title, .post-title, h1 {
-  text-shadow: 0 0 12px var(--accent-glow) !important;
+#sidebar .nav-link:hover i, #sidebar .nav-link.active i {
   color: var(--accent) !important;
 }
 
-/* 드래그앤드롭 존 (블로그 업로더용 커스텀 스타일) */
-.dropzone.dragover {
-  border-color: var(--accent) !important;
-  background: rgba(6, 182, 212, 0.08) !important;
-  box-shadow: 0 0 20px rgba(6, 182, 212, 0.2) !important;
+/* ─────────────────────────────────────────────────────────────────────────
+   6. 글 목록 뷰 리디자인 (Flat List Style - 카드 구조 제거)
+   ───────────────────────────────────────────────────────────────────────── */
+.post-preview {
+  background: transparent !important;
+  border: none !important;
+  border-bottom: 1px solid var(--main-border-color) !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  padding: 2.5rem 0 !important;
+  margin: 0 !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
 }
 
-/* ── Skeleton UI + Shimmer (로딩용) ── */
-@keyframes shimmer {
-  0%   { background-position: -400px 0; }
-  100% { background-position: 400px 0; }
+.post-preview:hover {
+  transform: none !important;
+  box-shadow: none !important;
+  border-color: var(--main-border-color) !important;
 }
 
-.skeleton {
-  background: linear-gradient(
-    90deg,
-    rgba(255,255,255,0.04) 25%,
-    rgba(255,255,255,0.10) 50%,
-    rgba(255,255,255,0.04) 75%
-  ) !important;
-  background-size: 800px 100% !important;
-  animation: shimmer 1.4s infinite linear !important;
-  border-radius: 8px !important;
+.post-preview .post-title {
+  color: var(--text-color) !important;
+  font-size: 1.45rem !important;
+  font-weight: 700 !important;
+  margin-bottom: 0.4rem !important;
+  text-shadow: none !important;
+  letter-spacing: -0.02em;
+  transition: color 0.15s ease-in-out;
+}
+.post-preview:hover .post-title {
+  color: var(--accent) !important;
 }
 
-.tile-skeleton {
-  height: 160px !important;
-  border-radius: 16px !important;
-  margin-bottom: 16px !important;
+.post-preview .post-excerpt {
+  color: var(--text-muted-color) !important;
+  font-size: 0.95rem !important;
+  line-height: 1.55 !important;
+  margin-bottom: 1rem !important;
 }
-.tile-skeleton .sk-title  { height: 20px; width: 60%; margin-bottom: 12px; }
-.tile-skeleton .sk-hash   { height: 14px; width: 80%; margin-bottom: 8px; }
-.tile-skeleton .sk-tags   { height: 14px; width: 40%; }
 
-/* ── 접근성 (Accessibility) ── */
-.skip-nav {
-  position: absolute;
-  top: -100%;
-  left: 1rem;
+.post-preview .post-meta {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.75rem !important;
+  font-family: var(--font-body) !important;
+  font-size: 0.825rem !important;
+  color: var(--text-muted-color) !important;
+}
+
+.post-preview .post-meta a {
+  color: var(--text-muted-color) !important;
+  background: var(--btn-hover-bg) !important;
+  padding: 0.2rem 0.6rem !important;
+  border-radius: 99px !important;
+  text-decoration: none !important;
+  font-weight: 500 !important;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.post-preview .post-meta a:hover {
   background: var(--accent) !important;
-  color: #000 !important;
-  padding: 0.5rem 1rem;
-  border-radius: 0 0 8px 8px;
-  font-weight: 700;
-  z-index: 99999;
-  transition: top 0.2s;
-}
-.skip-nav:focus {
-  top: 0;
+  color: #ffffff !important;
 }
 
+/* ─────────────────────────────────────────────────────────────────────────
+   7. 상세 본문 타이포그래피 (Georgia Serif 리딩 뷰)
+   ───────────────────────────────────────────────────────────────────────── */
+.post {
+  animation: none !important; /* 애니메이션 리셋 */
+  opacity: 1 !important;
+}
+
+.post-content {
+  font-family: var(--font-serif) !important;
+  font-size: 1.15rem !important;
+  line-height: 1.85 !important;
+  color: var(--text-color) !important;
+  letter-spacing: -0.01em;
+}
+
+.post-content p {
+  margin-bottom: 1.8rem !important;
+}
+
+/* 미디엄 스타일 대형 헤드라인 */
+.post h1, .post h2, .post h3, .post h4 {
+  font-family: var(--font-heading) !important;
+  color: var(--text-color) !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.02em;
+  margin-top: 2.5rem !important;
+  margin-bottom: 1rem !important;
+}
+
+.post h1 { font-size: 2.2rem !important; }
+.post h2 { font-size: 1.8rem !important; }
+.post h3 { font-size: 1.45rem !important; }
+
+/* 미디엄 스타일 블록 인용구 */
+.post-content blockquote {
+  background: transparent !important;
+  border-radius: 0 !important;
+  border: none !important;
+  border-left: 3px solid var(--blockquote-border-color) !important;
+  box-shadow: none !important;
+  padding: 0 0 0 1.25rem !important;
+  margin: 2rem 0 !important;
+  font-style: italic !important;
+  color: var(--text-color) !important;
+  font-size: 1.25rem !important;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   8. 카테고리 & 태그 (토픽 메뉴화)
+   ───────────────────────────────────────────────────────────────────────── */
+/* 카테고리/태그 목록 플랫 토픽 버블 */
+.card, .panel-block, #toc-wrapper {
+  background: transparent !important;
+  border: 1px solid var(--main-border-color) !important;
+  box-shadow: none !important;
+  border-radius: 8px !important;
+  backdrop-filter: none !important;
+}
+
+.categories, .tags-list {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 0.75rem !important;
+  list-style: none !important;
+  padding: 0 !important;
+}
+
+.categories .card, .tags-list a {
+  border-radius: 99px !important;
+  background: var(--btn-hover-bg) !important;
+  border: 1px solid var(--btn-border-color) !important;
+  padding: 0.4rem 1rem !important;
+  font-size: 0.9rem !important;
+  color: var(--text-color) !important;
+  text-decoration: none !important;
+  transition: all 0.2s ease !important;
+}
+
+.categories .card:hover, .tags-list a:hover {
+  background: var(--accent) !important;
+  color: #ffffff !important;
+  border-color: var(--accent) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* 포커스 아웃라인 */
 :focus-visible {
   outline: 2px solid var(--accent) !important;
   outline-offset: 3px !important;
-  border-radius: 4px !important;
-}
-:focus:not(:focus-visible) {
-  outline: none !important;
-}
-
-/* ── 반응형 모바일 최적화 ── */
-@media (max-width: 768px) {
-  .post-preview, .card {
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-    border-radius: 12px !important;
-  }
 }

@@ -14,12 +14,12 @@ timezone: Asia/Seoul
 # jekyll-seo-tag settings › https://github.com/jekyll/jekyll-seo-tag/blob/master/docs/usage.md
 # ↓ --------------------------
 
-title: Tech Writer # the main title
+title: Seunghun Steven Shin # the main title
 
-tagline: AI & 바이브 코딩 공부 지식 정리 # it will display as the subtitle
+tagline: I write about AI, tech writing, and software engineering. # it will display as the subtitle
 
 description: >- # used by seo meta and the atom feed
-  테크 라이터의 AI, 바이브 코딩 및 소프트웨어 개발 지식 정리 블로그입니다.
+  Seunghun Steven Shin's tech writing blog, sharing insights on AI, tech writing, and software engineering.
 
 # Fill in the protocol & hostname for your site.
 # E.g. 'https://username.github.io', note that it does not end with a '/'.
@@ -34,7 +34,7 @@ twitter:
 social:
   # Change to your full name.
   # It will be displayed as the default author of the posts and the copyright owner in the Footer
-  name: Shin Steven
+  name: Seunghun Steven Shin
   email: shin.steven97@gmail.com # change to your email address
   fediverse_handle: # fill in your fediverse handle. E.g. "@username@domain.com"
   links:
@@ -98,7 +98,7 @@ theme_mode: # [light | dark]
 cdn:
 
 # the avatar on sidebar, support local or CORS resources
-avatar:
+avatar: "https://miro.medium.com/v2/da:true/resize:fill:176:176/0*G2_tBjFdrw3jbhCW"
 
 # The URL of the site-wide social preview image used in SEO `og:image` meta tag.
 # It can be overridden by a customized `page.image` in front matter.
