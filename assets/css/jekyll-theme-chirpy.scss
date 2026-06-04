@@ -3,9 +3,227 @@
 
 @use 'main{%- if jekyll.environment == "production" -%}.bundle{%- endif -%}';
 
-@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css');
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap');
 
-/* 한국어 웹폰트 Pretendard 적용 */
+:root {
+  /* 폰트 정의 */
+  --font-body: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --font-heading: 'Montserrat', 'Pretendard', sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+/* 60-30-10 사이버 다크 네온 시안 테마 (Dark Mode) */
+html[data-mode="dark"] {
+  /* ── 60% 배경 레이어 (딥스페이스 다크) ── */
+  --bg-base:          #0a0b0d;  /* 메인 배경 */
+  --bg-deep:          #07080a;  /* 더 깊은 공간감 */
+  --bg-glow-indigo:   hsl(243, 75%, 15%);  /* 배경 radial 광원 */
+
+  --body-bg:          #0a0b0d;
+  --sidebar-bg:       #07080a;
+  --sidebar-border-color: rgba(255, 255, 255, 0.08);
+  --main-border-color: rgba(255, 255, 255, 0.08);
+
+  /* ── 30% 글래스 레이어 (콘텐츠 카드) ── */
+  --glass-bg:         rgba(255, 255, 255, 0.04);
+  --glass-border:     rgba(255, 255, 255, 0.08);
+  --glass-blur:       blur(16px);
+  --glass-modal-blur: blur(24px);
+
+  --card-bg:          var(--glass-bg);
+  --card-border-color: var(--glass-border);
+  --card-header-bg:   rgba(255, 255, 255, 0.02);
+
+  /* ── 10% 강조 레이어 (네온 사이버 시안) ── */
+  --accent:           #06b6d4;  /* 사이버 시안 */
+  --accent-glow:      rgba(6, 182, 212, 0.4);
+  --accent-hover:     #22d3ee;
+  --accent-danger:    #f43f5e;  /* 경고 */
+  --accent-success:   #10b981;  /* 성공 */
+
+  --link-color:       #06b6d4;
+  --link-underline-color: rgba(6, 182, 212, 0.4);
+  --text-color:       rgba(255, 255, 255, 0.92);
+  --text-muted-color: rgba(255, 255, 255, 0.55);
+
+  /* 버튼 및 스크롤바 등 UI 변수 오버라이드 */
+  --btn-border-color: rgba(255, 255, 255, 0.12);
+  --btn-hover-bg:     rgba(6, 182, 212, 0.10);
+  --btn-active-bg:    rgba(6, 182, 212, 0.20);
+
+  --prompt-tip-bg:    rgba(16, 185, 129, 0.08);
+  --prompt-info-bg:   rgba(6, 182, 212, 0.08);
+  --prompt-warning-bg: rgba(245, 158, 11, 0.08);
+  --prompt-danger-bg:  rgba(244, 63, 94, 0.08);
+
+  --blockquote-border-color: var(--accent);
+  --code-bg:          rgba(255, 255, 255, 0.03);
+  --code-color:       #22d3ee;
+  --tb-border-color:  rgba(255, 255, 255, 0.08);
+}
+
+/* ── 배경 그래인 텍스처 & 인디고 광원 ── */
 body {
-  font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif !important;
+  background: #0a0b0d radial-gradient(circle at 50% 50%, var(--bg-glow-indigo) 0%, #0a0b0d 100%) no-repeat fixed !important;
+  font-family: var(--font-body) !important;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.035;
+}
+
+/* ── 타이포그래피 적용 ── */
+h1, h2, h3, h4, h5, h6,
+.site-title, .site-subtitle,
+#sidebar #avatar, .nav-link,
+.post-title, .btn {
+  font-family: var(--font-heading) !important;
+}
+
+code, pre, .hash-value, kbd, samp, .post-meta {
+  font-family: var(--font-mono) !important;
+}
+
+/* ── 글래스모피즘 아키텍처 ── */
+.post-preview,
+.card,
+#search-result-wrapper,
+.panel-block,
+blockquote,
+pre,
+#toc-wrapper {
+  background: var(--glass-bg) !important;
+  border: 1px solid var(--glass-border) !important;
+  backdrop-filter: var(--glass-blur) !important;
+  -webkit-backdrop-filter: var(--glass-blur) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3) !important;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+}
+
+.post-preview:hover,
+.card:hover,
+.panel-block:hover {
+  transform: translateY(-4px) !important;
+  border-color: var(--accent) !important;
+  box-shadow: 0 12px 40px 0 rgba(6, 182, 212, 0.25) !important;
+}
+
+/* 모달 및 중요 요철 레이어 */
+.glass-modal {
+  background: rgba(10, 11, 13, 0.85) !important;
+  backdrop-filter: var(--glass-modal-blur) !important;
+  -webkit-backdrop-filter: var(--glass-modal-blur) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  border-radius: 20px !important;
+}
+
+/* ── 애니메이션 & 마이크로인터랙션 ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.fade-up, .post-preview, #post-list > article, .post {
+  opacity: 0;
+  animation: fadeUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards !important;
+}
+
+/* 버튼 Ripple 효과 */
+.btn, .sidebar-btn, #sidebar a {
+  position: relative;
+  overflow: hidden;
+}
+.btn::after, .sidebar-btn::after, #sidebar a::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.btn:active::after, .sidebar-btn:active::after, #sidebar a:active::after {
+  opacity: 1;
+}
+
+/* 네온 글로우 텍스트 */
+.glow-text, .site-title, .post-title, h1 {
+  text-shadow: 0 0 12px var(--accent-glow) !important;
+  color: var(--accent) !important;
+}
+
+/* 드래그앤드롭 존 (블로그 업로더용 커스텀 스타일) */
+.dropzone.dragover {
+  border-color: var(--accent) !important;
+  background: rgba(6, 182, 212, 0.08) !important;
+  box-shadow: 0 0 20px rgba(6, 182, 212, 0.2) !important;
+}
+
+/* ── Skeleton UI + Shimmer (로딩용) ── */
+@keyframes shimmer {
+  0%   { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(255,255,255,0.04) 25%,
+    rgba(255,255,255,0.10) 50%,
+    rgba(255,255,255,0.04) 75%
+  ) !important;
+  background-size: 800px 100% !important;
+  animation: shimmer 1.4s infinite linear !important;
+  border-radius: 8px !important;
+}
+
+.tile-skeleton {
+  height: 160px !important;
+  border-radius: 16px !important;
+  margin-bottom: 16px !important;
+}
+.tile-skeleton .sk-title  { height: 20px; width: 60%; margin-bottom: 12px; }
+.tile-skeleton .sk-hash   { height: 14px; width: 80%; margin-bottom: 8px; }
+.tile-skeleton .sk-tags   { height: 14px; width: 40%; }
+
+/* ── 접근성 (Accessibility) ── */
+.skip-nav {
+  position: absolute;
+  top: -100%;
+  left: 1rem;
+  background: var(--accent) !important;
+  color: #000 !important;
+  padding: 0.5rem 1rem;
+  border-radius: 0 0 8px 8px;
+  font-weight: 700;
+  z-index: 99999;
+  transition: top 0.2s;
+}
+.skip-nav:focus {
+  top: 0;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent) !important;
+  outline-offset: 3px !important;
+  border-radius: 4px !important;
+}
+:focus:not(:focus-visible) {
+  outline: none !important;
+}
+
+/* ── 반응형 모바일 최적화 ── */
+@media (max-width: 768px) {
+  .post-preview, .card {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    border-radius: 12px !important;
+  }
 }
