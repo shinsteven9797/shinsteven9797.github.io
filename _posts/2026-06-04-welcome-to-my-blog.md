@@ -1,6 +1,6 @@
 ---
 title: "How I Use AI to Drive 100K Monthly Views to My Digital Products"
-date: 2026-06-05 12:00:00 +0900
+date: 2026-06-04 12:00:00 +0900
 categories: [AI, Tech Writing]
 tags: [ai, productivity, medium]
 image: https://miro.medium.com/v2/resize:fill:320:214/0*GyLZ9M6J4ptHE2hl.jpg
