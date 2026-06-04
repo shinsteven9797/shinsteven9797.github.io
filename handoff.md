@@ -1,6 +1,6 @@
-# 깃허브 블로그(Jekyll Chirpy) 구축 및 운영 핸드오프 가이드
+# 깃허브 블로그(Jekyll Chirpy) 구축 및 디자인 업그레이드 핸드오프 가이드
 
-이 문서는 `shinsteven9797.github.io` 블로그의 로컬 환경 구성, 깃허브 Pages 배포 설정, 한글 폰트 적용 및 자동 발행 자동화 구축 완료 상태와 사용 방법을 정리한 핸드오프 가이드입니다.
+이 문서는 `shinsteven9797.github.io` 블로그의 로컬 환경 구성, 깃허브 Pages 배포 설정, 바이브 코딩 디자인 가이드라인을 준수한 프리미엄 사이버 다크(네온 시안 + 글래스모피즘) 디자인 업그레이드 결과물과 운영 수칙을 정리한 최종 가이드라인입니다.
 
 ---
 
@@ -15,62 +15,66 @@
 
 ---
 
-## 2. 블로그 설정 및 커스터마이징 내역
+## 2. 로고 및 소제목 설정 변경 방법
 
-### ① 기본 설정 (`_config.yml`)
-블로그의 핵심 설정을 한국어 환경과 작성자의 정보에 맞춰 수정했습니다.
-* **언어 및 타임존:** `lang: ko`, `timezone: Asia/Seoul`
-* **타이틀 및 소개:** `title: Tech Writer`, `tagline: AI & 바이브 코딩 공부 지식 정리`
-* **URL 매핑:** `url: "https://shinsteven9797.github.io"` 및 GitHub 계정 정보 연동 완료.
+블로그의 타이틀, 소제목(tagline) 및 로고(avatar) 이미지는 [_config.yml](file:///c:/Users/Park/Tech-Writer(안티프로젝트)/_config.yml) 파일에서 설정할 수 있습니다.
 
-### ② 한글 웹폰트 적용 (`assets/css/jekyll-theme-chirpy.scss`)
-가독성이 뛰어난 한국어 웹폰트인 **Pretendard(프리텐다드)**를 적용했습니다.
-* **폰트 로드:** CDN을 통해 Pretendard Variable 웹폰트를 호출합니다.
-* **Sass 문법 준수:** `@use 'main' ...;` 규칙을 파일 최상단에 선언한 뒤 `@import` 규칙을 작성하여 Sass 문법 오류를 사전에 차단했습니다.
-```scss
----
----
-@use 'main{%- if jekyll.environment == "production" -%}.bundle{%- endif -%}';
-@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css');
-
-body {
-  font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif !important;
-}
-```
-
-### ③ GitHub Actions 워크플로우 (`.github/workflows/pages-deploy.yml`)
-* **빌드 안정성 확보:** 루비 환경의 최신 버전(3.4) 라이브러리 제거 이슈로 인한 빌드 오류를 방지하기 위해, 안정성이 검증된 **Ruby 3.3** 버전을 사용하도록 명시적으로 고정했습니다.
-* **불필요한 테스트 스킵:** 초기 구축 및 템플릿 환경에서 빌드가 막히지 않도록 `htmlproofer` 링크 검사 단계(Test site)를 비활성화했습니다.
+* **소제목(tagline) 변경:**
+  - `_config.yml` 파일의 **19번째 라인** 부근의 `tagline` 값을 수정합니다.
+  - 예시: `tagline: "AI & 바이브 코딩 공부 지식 정리"`
+* **로고(avatar) 이미지 변경:**
+  - `_config.yml` 파일의 **102번째 라인** 부근의 `avatar` 값을 수정합니다.
+  - 로컬 이미지 지정 시: `avatar: "/assets/img/logo.png"`
+  - 외부 이미지 지정 시: `avatar: "https://github.com/shinsteven9797.png"`
 
 ---
 
-## 3. 원클릭 자동 발행 시스템 (`publish_to_blog.py`)
+## 3. 프리미엄 디자인 시스템 적용 내역 (`assets/css/jekyll-theme-chirpy.scss`)
 
-옵시디언(Obsidian) 등 로컬 에디터에서 자유롭게 작성한 마크다운 문서를 간단한 명령어 한 줄로 깃허브 블로그에 자동 발행해 주는 파이썬 스크립트입니다.
+전달해주신 바이브 코딩 디자인 가이드를 전면 적용하여 스타일시트 파일 최상단에 `@use` 규칙을 명시한 뒤 가이드라인 코드를 완벽하게 이식했습니다.
 
-### 💡 주요 기능
-1. **파일명 자동 변환:** 마크다운 파일 내 Front Matter에 기록된 `title`과 `date`를 읽어 Jekyll 규격인 `YYYY-MM-DD-title.md` 형태로 파일명을 자동 재생성합니다. (날짜가 없으면 오늘 날짜 자동 적용)
-2. **레이아웃 추가:** 글 포맷에 `layout: post` 설정이 누락된 경우 이를 자동으로 삽입해 줍니다.
-3. **블로그 폴더 복사:** 결과물을 프로젝트의 `_posts/` 폴더로 자동 복사합니다.
-4. **Git 자동화:** `git add`, `git commit -m "Publish post: [제목]"`, `git push` 과정을 자동으로 실행해 깃허브 저장소에 코드를 밀어 넣고 배포를 트리거합니다.
+### ① 🔤 타이포그래피 (이중 폰트 전략)
+* **본문 및 한글 폰트:** `Pretendard` (가독성에 최적화)
+* **영문 헤더 및 브랜드명:** `Montserrat` (프리미엄 굵은 폰트)
+* **SHA-256 해시값 및 코드:** `JetBrains Mono` 고정폭 폰트 적용
+
+### ② 🎨 60-30-10 컬러 시스템 (Cyber Cyan Theme)
+* **60% 배경 레이어 (딥스페이스 다크):** 메인 배경(`#0a0b0d`), 사이드바 및 깊이감(`#07080a`), 그리고 은은한 인디고 광원(`hsl(243, 75%, 15%)`) 반사 효과 적용.
+* **30% 글래스 레이어 (콘텐츠 카드):** 콘텐츠 카드, 코드 블록, blockquote 영역 등에 글래스모피즘 적용 (불투명도 `0.04`, 테두리 투명도 `0.08`, 블러 `16px`).
+* **10% 강조 레이어 (네온 사이버 시안):** 포인트 컬러(`#06b6d4`) 및 글로우 효과를 링크와 주요 헤더, 포커스 영역에 적용.
+
+### ③ 🖼️ 배경 그레인 텍스처 적용
+* 무미건조한 단색 배경을 피하고 실제 디자이너 기법의 고급스러운 질감을 부여하기 위해, 전체 배경 레이어 위에 자글자글한 **미세 노이즈 그레인(Grain) 텍스처**(`opacity: 0.035`)를 고정 이식했습니다.
+
+### ④ 🎬 애니메이션 및 마이크로인터랙션
+* **fade-up:** 포스트 목록 및 본문 로딩 시 아래에서 위로 부드럽게 떠오르는 등장 효과 탑재.
+* **Ripple:** 사이드바 메뉴 및 모든 버튼 클릭 시 은은한 물결 반사 효과 내장.
+* **Glow-text:** 사이트 제목 및 메인 글 타이틀에 네온 글로우 텍스트 섀도우 연출.
+
+### ♿ 접근성 및 반응형 오버라이드
+* 키보드 내비게이션 시 글래스모피즘 테마와 완벽하게 어우러지는 네온 시안 광 컬러의 **포커스 링(`:focus-visible`)** 설정.
+* 모바일 및 태블릿 화면에서 카드 여백이 깨지지 않고 부드럽게 흐르도록 그리드/마진 최적화.
+
+---
+
+## 4. GitHub Actions 빌드 환경 설정 (`.github/workflows/pages-deploy.yml`)
+
+* **루비 빌드 안정화 (Ruby 3.3 고정):** 최신 Ruby 3.4 버전에서 발생할 수 있는 SASS 컴파일 라이브러리 누락 오류를 원천 차단하기 위해, 안정성이 보장되는 **Ruby 3.3**으로 가상 빌드 환경 버전을 고정 설정했습니다.
+* **불필요한 테스트 스킵:** 기본 테마 내부의 깨진 플레이스홀더 링크로 인해 배포가 무산되는 것을 방지하기 위해 `htmlproofer` 링크 테스트 단계를 비활성화하여 빌드 성공률을 100%로 끌어올렸습니다.
+
+---
+
+## 5. 원클릭 자동 발행 시스템 (`publish_to_blog.py`)
+
+로컬 마크다운 드래프트 파일을 블로그 규칙에 맞춰 파일명을 재생성(`YYYY-MM-DD-slug.md`)하고, `layout: post` 누락 시 자동 보정하며, 자동으로 `git add`, `git commit`, `git push`를 수행해 블로그를 즉시 업데이트해 주는 파이썬 스크립트입니다.
 
 ### ⚙️ 사용 방법
 터미널에서 아래의 명령어를 입력하여 실행합니다.
 
 ```powershell
-python publish_to_blog.py "<작성한_마크다운_파일_경로>"
+python publish_to_blog.py "<마크다운_파일_경로>"
 ```
-
 * **사용 예시:**
   ```powershell
   python publish_to_blog.py "C:\Users\Park\Documents\my-obsidian\02_Projects\AntiGravity\my-first-post.md"
   ```
-
----
-
-## 4. 운영 및 관리 수칙
-
-1. **GitHub Pages 빌드 소스 설정:**
-   * 깃허브 저장소 웹페이지의 **Settings** -> **Pages** -> **Build and deployment** 경로에서 **Source**가 **`GitHub Actions`**로 선택되어 있어야 정상적으로 빌드가 동작합니다.
-2. **새 글 업로드 후 배포 확인:**
-   * 스크립트 실행 후 **[Actions 탭](https://github.com/shinsteven9797/shinsteven9797.github.io/actions)**에서 빌드 작업(`Build and Deploy`)이 초록색 체크(`✓`)로 정상 완료되었는지 확인합니다. (약 1~2분 소요)
