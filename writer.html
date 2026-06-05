@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="ko" data-mode="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Antigravity Premium Web Writer (WYSIWYG)</title>
+  
+  <!-- 외부 리소스 로드 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.2.0/css/all.min.css">
+
+  <style>
+    /* ─────────────────────────────────────────────────────────────────────────
+       1. 디자인 테마 토큰 (Nordic Teal & Slate 기반)
+       ───────────────────────────────────────────────────────────────────────── */
+    :root {
+      --font-body: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-heading: 'Montserrat', 'Pretendard', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --font-serif: Georgia, Cambria, serif;
+    }
+    
+    html:not([data-mode="dark"]),
+    html[data-mode="light"] {
+      --bg-base:               #faf9f6;
+      --panel-bg:              #ffffff;
+      --border-color:          rgba(0, 0, 0, 0.08);
+      --accent:                #0f4c4a;
+      --accent-hover:          #0b3635;
+      --accent-glow:           rgba(15, 76, 74, 0.1);
+      --text-color:            #1a1a1a;
+      --text-muted:            #606060;
+      --editor-shadow:         0 10px 30px rgba(0, 0, 0, 0.04);
+      --btn-hover:             rgba(0, 0, 0, 0.03);
+    }
+    
+    html[data-mode="dark"] {
+      --bg-base:               #0b0f19;
+      --panel-bg:              #0f1422;
+      --border-color:          rgba(255, 255, 255, 0.08);
+      --accent:                #0ea5e9;
+      --accent-hover:          #38bdf8;
+      --accent-glow:           rgba(14, 165, 233, 0.15);
+      --text-color:            rgba(255, 255, 255, 0.95);
+      --text-muted:            rgba(255, 255, 255, 0.55);
+      --editor-shadow:         0 15px 40px rgba(0, 0, 0, 0.3);
+      --btn-hover:             rgba(255, 255, 255, 0.05);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: var(--bg-base);
+      color: var(--text-color);
+      font-family: var(--font-body);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    /* ─────────────────────────────────────────────────────────────────────────
+       2. 헤더 및 컨트롤 레이아웃
+       ───────────────────────────────────────────────────────────────────────── */
+    header {
+      background: var(--panel-bg);
+      border-bottom: 1px solid var(--border-color);
+      padding: 0.75rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 1rem;
+    }
+
+    .brand-logo {
+      color: var(--accent);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 0.8; }
+      50% { transform: scale(1.1); opacity: 1; }
+      100% { transform: scale(1); opacity: 0.8; }
+    }
+
+    .actions-group {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+    }
+
+    .btn {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: background 0.2s;
+    }
+    
+    .btn:hover {
+      background: var(--accent-hover);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--text-color);
+    }
+    .btn-secondary:hover {
+      background: var(--btn-hover);
+    }
+
+    /* ─────────────────────────────────────────────────────────────────────────
+       3. 메인 작업 레이아웃
+       ───────────────────────────────────────────────────────────────────────── */
+    .workspace {
+      display: flex;
+      flex: 1;
+      max-width: 1400px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 1.5rem;
+      gap: 1.5rem;
+    }
+
+    /* 사이드 메타데이터 폼 */
+    .meta-sidebar {
+      width: 300px;
+      background: var(--panel-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+      height: fit-content;
+    }
+
+    .meta-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .meta-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .meta-input {
+      background: var(--bg-base);
+      border: 1px solid var(--border-color);
+      padding: 0.5rem 0.75rem;
+      border-radius: 6px;
+      color: var(--text-color);
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .meta-input:focus {
+      border-color: var(--accent);
+    }
+
+    /* 에디터 메인 프레임 */
+    .editor-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: var(--panel-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      box-shadow: var(--editor-shadow);
+      overflow: hidden;
+    }
+
+    /* WYSIWYG 리본 바 */
+    .ribbon-bar {
+      background: var(--panel-bg);
+      border-bottom: 1px solid var(--border-color);
+      padding: 0.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem;
+      align-items: center;
+    }
+
+    .ribbon-separator {
+      width: 1px;
+      height: 20px;
+      background: var(--border-color);
+      margin: 0 0.25rem;
+    }
+
+    .ribbon-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-color);
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      transition: background 0.15s;
+    }
+
+    .ribbon-btn:hover {
+      background: var(--btn-hover);
+    }
+
+    .ribbon-btn.active {
+      background: var(--accent-glow);
+      color: var(--accent);
+    }
+
+    .ribbon-select {
+      background: var(--bg-base);
+      border: 1px solid var(--border-color);
+      color: var(--text-color);
+      padding: 0.25rem 0.5rem;
+      font-size: 0.8rem;
+      border-radius: 4px;
+      outline: none;
+      cursor: pointer;
+      font-family: var(--font-body);
+    }
+
+    /* 에디팅 영역 */
+    .editing-area {
+      flex: 1;
+      padding: 3rem 4rem;
+      overflow-y: auto;
+      outline: none;
+      font-family: var(--font-serif);
+      font-size: 1.15rem;
+      line-height: 1.95;
+      color: var(--text-color);
+      min-height: 500px;
+      max-height: 70vh;
+    }
+
+    /* WYSIWYG 렌더링 스타일 매칭 */
+    .editing-area h1, 
+    .editing-area h2, 
+    .editing-area h3 {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      color: var(--text-color);
+      margin-top: 2rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .editing-area h1 { font-size: 2rem; }
+    .editing-area h2 { font-size: 1.6rem; }
+    .editing-area h3 { font-size: 1.3rem; }
+
+    .editing-area p {
+      margin-bottom: 1.5rem;
+    }
+
+    .editing-area blockquote {
+      border-left: 3px solid var(--accent);
+      padding-left: 1.25rem;
+      margin: 1.5rem 0;
+      font-style: italic;
+      color: var(--text-muted);
+    }
+
+    .editing-area img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+      margin: 1.5rem auto;
+      display: block;
+      border: 1px solid var(--border-color);
+    }
+
+    .editing-area pre, 
+    .editing-area code {
+      font-family: var(--font-mono);
+      background: var(--bg-base);
+      border-radius: 4px;
+      padding: 0.2rem 0.4rem;
+      font-size: 0.9rem;
+    }
+
+    .editing-area pre {
+      padding: 1rem;
+      margin: 1.5rem 0;
+      overflow-x: auto;
+      display: block;
+    }
+
+    .editing-area pre code {
+      padding: 0;
+      background: transparent;
+    }
+
+    /* 포커스 아웃라인 방지 */
+    .editing-area:focus {
+      outline: none;
+    }
+
+    /* 플레이스홀더 효과 */
+    .editing-area:empty::before {
+      content: '여기에 생각과 지식을 자유롭게 기록하세요...';
+      color: var(--text-muted);
+      font-style: italic;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 헤더 바 -->
+  <header>
+    <div class="brand">
+      <i class="fa-solid fa-feather-pointed brand-logo"></i>
+      <span>Antigravity Premium Writer</span>
+    </div>
+    
+    <div class="actions-group">
+      <button class="btn btn-secondary" onclick="toggleMode()">
+        <i class="fa-solid fa-circle-half-stroke"></i> 화면 모드
+      </button>
+      <button class="btn btn-secondary" onclick="exportMarkdown()">
+        <i class="fa-solid fa-file-code"></i> 마크다운 소스
+      </button>
+      <button class="btn" onclick="saveFile()">
+        <i class="fa-solid fa-floppy-disk"></i> 로컬로 저장 (.md)
+      </button>
+    </div>
+  </header>
+
+  <!-- 메인 작업창 -->
+  <div class="workspace">
+    <!-- 메타데이터 설정 사이드바 -->
+    <aside class="meta-sidebar">
+      <div class="meta-group">
+        <label class="meta-label">제목 (Title)</label>
+        <input type="text" id="post-title" class="meta-input" placeholder="글 제목 입력" value="AI 협업 코딩 지식 정리">
+      </div>
+      
+      <div class="meta-group">
+        <label class="meta-label">작성 날짜 (Date)</label>
+        <input type="date" id="post-date" class="meta-input">
+      </div>
+      
+      <div class="meta-group">
+        <label class="meta-label">카테고리 (쉼표 구분)</label>
+        <input type="text" id="post-categories" class="meta-input" placeholder="AI, Tech Writing" value="AI, Tech Writing">
+      </div>
+
+      <div class="meta-group">
+        <label class="meta-label">태그 (쉼표 구분)</label>
+        <input type="text" id="post-tags" class="meta-input" placeholder="ai, markdown, vibe" value="ai, medium, markdown">
+      </div>
+    </aside>
+
+    <!-- 에디터 메인 프레임 -->
+    <div class="editor-container">
+      <!-- 서식 조작 리본 바 (WYSIWYG) -->
+      <div class="ribbon-bar">
+        <!-- 제목 종류 -->
+        <select class="ribbon-select" onchange="formatDoc('formatBlock', this.value); this.selectedIndex=0;">
+          <option value="">텍스트 서식</option>
+          <option value="p">일반 본문 (P)</option>
+          <option value="h1">대제목 (H1)</option>
+          <option value="h2">중제목 (H2)</option>
+          <option value="h3">소제목 (H3)</option>
+          <option value="blockquote">인용구 (Blockquote)</option>
+          <option value="pre">코드 블록 (Pre)</option>
+        </select>
+
+        <div class="ribbon-separator"></div>
+
+        <!-- 폰트 계열 -->
+        <select class="ribbon-select" onchange="formatDoc('fontName', this.value)">
+          <option value="Georgia">바탕체 (Georgia Serif)</option>
+          <option value="Pretendard">고딕체 (Pretendard Sans)</option>
+          <option value="Montserrat">헤더용 (Montserrat)</option>
+          <option value="JetBrains Mono">코드용 (Mono)</option>
+        </select>
+
+        <!-- 글씨 크기 (정밀) -->
+        <select class="ribbon-select" onchange="setFontSize(this.value)">
+          <option value="4">글씨 보통 (16px)</option>
+          <option value="3">글씨 작게 (14px)</option>
+          <option value="5">글씨 크게 (18px)</option>
+          <option value="6">아주 크게 (24px)</option>
+        </select>
+
+        <div class="ribbon-separator"></div>
+
+        <!-- 스타일 버튼들 -->
+        <button class="ribbon-btn" title="굵게" onclick="formatDoc('bold')"><i class="fa-solid fa-bold"></i></button>
+        <button class="ribbon-btn" title="기울임" onclick="formatDoc('italic')"><i class="fa-solid fa-italic"></i></button>
+        <button class="ribbon-btn" title="밑줄" onclick="formatDoc('underline')"><i class="fa-solid fa-underline"></i></button>
+        <button class="ribbon-btn" title="취소선" onclick="formatDoc('strikeThrough')"><i class="fa-solid fa-strikethrough"></i></button>
+
+        <div class="ribbon-separator"></div>
+
+        <!-- 리스트 -->
+        <button class="ribbon-btn" title="글머리표" onclick="formatDoc('insertUnorderedList')"><i class="fa-solid fa-list-ul"></i></button>
+        <button class="ribbon-btn" title="번호매기기" onclick="formatDoc('insertOrderedList')"><i class="fa-solid fa-list-ol"></i></button>
+        
+        <div class="ribbon-separator"></div>
+
+        <!-- 특수 요소 -->
+        <button class="ribbon-btn" title="링크 추가" onclick="insertLink()"><i class="fa-solid fa-link"></i></button>
+        <button class="ribbon-btn" title="이미지 추가" onclick="insertImage()"><i class="fa-solid fa-image"></i></button>
+        <button class="ribbon-btn" title="가로 구분선" onclick="formatDoc('insertHorizontalRule')"><i class="fa-solid fa-minus"></i></button>
+      </div>
+
+      <!-- 실시간 에디팅 영역 -->
+      <div id="editor" class="editing-area" contenteditable="true">
+        <h1>여기에 멋진 제목을 작성해 보세요</h1>
+        <p>기존 마크다운 편집기들과 다르게, 글꼴의 크기 변경, 굵기 조절, 인용구 삽입, 이미지 링크 추가가 즉시 시각적으로 보입니다.</p>
+        <blockquote>이것은 테스트 인용구입니다. 블로그 테마와 동일하게 왼쪽에 두꺼운 포인트 컬러 바가 생깁니다.</blockquote>
+        <p>본문을 드래그한 다음 상단의 서식 도구를 사용해 텍스트를 손쉽게 다듬어 보세요.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 오늘 날짜 자동 기입
+    document.getElementById('post-date').value = new Date().toISOString().substring(0, 10);
+
+    // WYSIWYG 에디팅 명령어 실행
+    function formatDoc(cmd, value = null) {
+      document.execCommand(cmd, false, value);
+      document.getElementById('editor').focus();
+    }
+
+    // 글씨 크기 오버라이드
+    function setFontSize(size) {
+      document.execCommand('fontSize', false, size);
+      document.getElementById('editor').focus();
+    }
+
+    // 링크 삽입 팝업
+    function insertLink() {
+      const url = prompt("연결할 웹 주소(URL)를 입력하세요:");
+      if (url) {
+        formatDoc('createLink', url);
+      }
+    }
+
+    // 이미지 삽입 팝업
+    function insertImage() {
+      const url = prompt("삽입할 이미지 주소(URL) 또는 로컬 경로를 입력하세요:", "https://");
+      if (url) {
+        formatDoc('insertImage', url);
+      }
+    }
+
+    // 다크모드/라이트모드 토글
+    function toggleMode() {
+      const html = document.documentElement;
+      const currentMode = html.getAttribute('data-mode') || 'dark';
+      html.setAttribute('data-mode', currentMode === 'dark' ? 'light' : 'dark');
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // 4. HTML -> Clean Markdown 변환 코어 모듈
+    // ─────────────────────────────────────────────────────────────────────────
+    function cleanHtmlToMarkdown(htmlString) {
+      const tempDiv = document.createElement('div');
+      tempDiv.innerHTML = htmlString;
+      
+      let markdown = '';
+      
+      function parseNode(node) {
+        if (node.nodeType === 3) { // Text Node
+          return node.nodeValue;
+        }
+        
+        if (node.nodeType !== 1) { // Not Element Node
+          return '';
+        }
+        
+        let childrenContent = '';
+        node.childNodes.forEach(child => {
+          childrenContent += parseNode(child);
+        });
+        
+        const tagName = node.tagName.toLowerCase();
+        
+        switch(tagName) {
+          case 'h1':
+            return `\n\n# ${childrenContent.trim()}\n\n`;
+          case 'h2':
+            return `\n\n## ${childrenContent.trim()}\n\n`;
+          case 'h3':
+            return `\n\n### ${childrenContent.trim()}\n\n`;
+          case 'h4':
+            return `\n\n#### ${childrenContent.trim()}\n\n`;
+          case 'p':
+            // 빈 단락 체크
+            if (!childrenContent.trim()) return '';
+            return `\n\n${childrenContent.trim()}\n\n`;
+          case 'b':
+          case 'strong':
+            return `**${childrenContent}**`;
+          case 'i':
+          case 'em':
+            return `*${childrenContent}*`;
+          case 'u':
+            return `<u>${childrenContent}</u>`;
+          case 'strike':
+          case 'del':
+            return `~~${childrenContent}~~`;
+          case 'blockquote':
+            return `\n\n> ${childrenContent.trim().replace(/\n/g, '\n> ')}\n\n`;
+          case 'pre':
+            return `\n\n\`\`\`\n${node.textContent.trim()}\n\`\`\`\n\n`;
+          case 'code':
+            // pre 내부에 중첩된 code 태그 방지
+            if (node.parentNode.tagName.toLowerCase() === 'pre') {
+              return childrenContent;
+            }
+            return `\`${childrenContent}\``;
+          case 'ul':
+            return `\n\n${childrenContent}\n\n`;
+          case 'ol':
+            return `\n\n${childrenContent}\n\n`;
+          case 'li':
+            const parentTag = node.parentNode ? node.parentNode.tagName.toLowerCase() : 'ul';
+            if (parentTag === 'ol') {
+              return `1. ${childrenContent.trim()}\n`;
+            }
+            return `- ${childrenContent.trim()}\n`;
+          case 'a':
+            const href = node.getAttribute('href') || '#';
+            return `[${childrenContent}](${href})`;
+          case 'img':
+            const src = node.getAttribute('src') || '';
+            const alt = node.getAttribute('alt') || 'image';
+            return `\n\n![${alt}](${src})\n\n`;
+          case 'hr':
+            return `\n\n---\n\n`;
+          case 'br':
+            return `\n`;
+          case 'div':
+            return `\n${childrenContent}\n`;
+          case 'font':
+            // font 태그는 텍스트 스타일만 반환
+            return childrenContent;
+          default:
+            return childrenContent;
+        }
+      }
+      
+      // 파싱 수행
+      markdown = parseNode(tempDiv);
+      
+      // 여러 개의 빈 줄 정규화 및 공백 정리
+      markdown = markdown.replace(/\n{3,}/g, '\n\n');
+      return markdown.trim();
+    }
+
+    // 마크다운 소스 보기 팝업
+    function exportMarkdown() {
+      const yaml = generateYamlHeader();
+      const contentHtml = document.getElementById('editor').innerHTML;
+      const mdBody = cleanHtmlToMarkdown(contentHtml);
+      
+      const fullContent = `${yaml}\n\n${mdBody}`;
+      
+      const pre = document.createElement('pre');
+      pre.style.background = '#1e1e2e';
+      pre.style.color = '#cdd6f4';
+      pre.style.padding = '1.5rem';
+      pre.style.borderRadius = '8px';
+      pre.style.fontSize = '0.85rem';
+      pre.style.overflow = 'auto';
+      pre.style.maxHeight = '400px';
+      pre.style.whiteSpace = 'pre-wrap';
+      pre.textContent = fullContent;
+      
+      // 모달창 띄우기
+      const modal = document.createElement('div');
+      modal.style.position = 'fixed';
+      modal.style.inset = '0';
+      modal.style.background = 'rgba(0,0,0,0.6)';
+      modal.style.display = 'flex';
+      modal.style.alignItems = 'center';
+      modal.style.justifyContent = 'center';
+      modal.style.zIndex = '1000';
+      modal.style.padding = '2rem';
+      
+      const box = document.createElement('div');
+      box.style.background = 'var(--panel-bg)';
+      box.style.border = '1px solid var(--border-color)';
+      box.style.borderRadius = '12px';
+      box.style.padding = '1.5rem';
+      box.style.maxWidth = '700px';
+      box.style.width = '100%';
+      box.style.display = 'flex';
+      box.style.flexDirection = 'column';
+      box.style.gap = '1rem';
+      
+      const title = document.createElement('h3');
+      title.textContent = '변환된 마크다운 (YAML 포함)';
+      title.style.fontFamily = 'var(--font-heading)';
+      title.style.color = 'var(--text-color)';
+      
+      const closeBtn = document.createElement('button');
+      closeBtn.className = 'btn';
+      closeBtn.style.alignSelf = 'flex-end';
+      closeBtn.textContent = '닫기';
+      closeBtn.onclick = () => modal.remove();
+      
+      box.appendChild(title);
+      box.appendChild(pre);
+      box.appendChild(closeBtn);
+      modal.appendChild(box);
+      document.body.appendChild(modal);
+    }
+
+    // YAML Front Matter 생성기
+    function generateYamlHeader() {
+      const title = document.getElementById('post-title').value || 'Untitled';
+      const date = document.getElementById('post-date').value || new Date().toISOString().substring(0,10);
+      const categoriesRaw = document.getElementById('post-categories').value || '';
+      const tagsRaw = document.getElementById('post-tags').value || '';
+      
+      const categories = categoriesRaw.split(',').map(s => s.trim()).filter(Boolean);
+      const tags = tagsRaw.split(',').map(s => s.trim()).filter(Boolean);
+      
+      let yaml = '---\n';
+      yaml += `title: "${title}"\n`;
+      yaml += `date: ${date} 12:00:00 +0900\n`;
+      if (categories.length > 0) {
+        yaml += `categories: [${categories.join(', ')}]\n`;
+      }
+      if (tags.length > 0) {
+        yaml += `tags: [${tags.join(', ')}]\n`;
+      }
+      yaml += '---';
+      return yaml;
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // 5. 파일 로컬 저장 (Save System via File System API / Download)
+    // ─────────────────────────────────────────────────────────────────────────
+    async function saveFile() {
+      const title = document.getElementById('post-title').value || 'untitled';
+      const date = document.getElementById('post-date').value || new Date().toISOString().substring(0,10);
+      
+      // 파일명 슬러그화
+      const slug = title.toLowerCase()
+        .replace(/[^a-z0-9가-힣\s-]/g, '')
+        .replace(/\s+/g, '-');
+      const filename = `${date}-${slug}.md`;
+
+      const yaml = generateYamlHeader();
+      const contentHtml = document.getElementById('editor').innerHTML;
+      const mdBody = cleanHtmlToMarkdown(contentHtml);
+      const fullText = `${yaml}\n\n${mdBody}`;
+
+      // 최신 브라우저 File System Access API 지원 여부 확인
+      if (window.showSaveFilePicker) {
+        try {
+          const handle = await window.showSaveFilePicker({
+            suggestedName: filename,
+            types: [{
+              description: 'Markdown File',
+              accept: { 'text/markdown': ['.md'] },
+            }],
+          });
+          const writable = await handle.createWritable();
+          await writable.write(fullText);
+          await writable.close();
+          alert('성공적으로 저장되었습니다!');
+        } catch (err) {
+          if (err.name !== 'AbortError') {
+            console.error(err);
+            fallbackDownload(filename, fullText);
+          }
+        }
+      } else {
+        fallbackDownload(filename, fullText);
+      }
+    }
+
+    // 하위 브라우저용 가짜 다운로드 링크 폴백
+    function fallbackDownload(filename, text) {
+      const blob = new Blob([text], { type: 'text/markdown;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+  </script>
+</body>
+</html>

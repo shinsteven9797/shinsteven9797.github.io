@@ -21,69 +21,73 @@
    1. 미디엄(Medium) 라이트 모드 컬러 시스템 (기본값)
    ───────────────────────────────────────────────────────────────────────── */
 :root, html:not([data-mode="dark"]), html[data-mode="light"] {
-  --bg-base:               #ffffff;
-  --body-bg:               #ffffff;
-  --sidebar-bg:            #ffffff; /* 미디엄 라이트 모드 1톤 */
-  --sidebar-border-color:  #f2f2f2;
-  --main-border-color:     #f2f2f2;
+  --bg-base:               #faf9f6; /* 알라바스터 웜그레이 */
+  --body-bg:               #faf9f6;
+  --sidebar-bg:            #ffffff;
+  --sidebar-border-color:  rgba(0, 0, 0, 0.06);
+  --main-border-color:     rgba(0, 0, 0, 0.06);
 
-  --accent:                #1a8917; /* 미디엄 시그니처 그린 */
-  --accent-glow:           rgba(26, 137, 23, 0.15);
-  --accent-hover:          #156f12;
+  --accent:                #0f4c4a; /* 딥 틸 (주요 버튼/포인트) */
+  --accent-glow:           rgba(15, 76, 74, 0.15);
+  --accent-hover:          #0b3635;
   --accent-danger:         #d32f2f;
-  --accent-success:        #1a8917;
+  --accent-success:        #0f4c4a;
 
-  --link-color:            #242424;
+  --link-color:            #1a1a1a;
   --link-underline-color:  transparent;
-  --text-color:            #242424;
-  --text-muted-color:      #6b6b6b;
+  --text-color:            #1a1a1a;
+  --text-muted-color:      #606060;
 
-  --btn-border-color:      #e6e6e6;
-  --btn-hover-bg:          #f2f2f2;
-  --btn-active-bg:         #e6e6e6;
+  --btn-border-color:      rgba(0, 0, 0, 0.06);
+  --btn-hover-bg:          rgba(0, 0, 0, 0.025);
+  --btn-active-bg:         rgba(0, 0, 0, 0.05);
 
   --card-bg:               transparent;
-  --card-border-color:     #f2f2f2;
+  --card-border-color:     rgba(0, 0, 0, 0.06);
+  --card-hover-bg:         rgba(0, 0, 0, 0.015);
   
-  --blockquote-border-color: #1a8917;
-  --code-bg:               #f2f2f2;
+  --blockquote-border-color: #0f4c4a;
+  --code-bg:               rgba(0, 0, 0, 0.03);
   --code-color:            #c2185b;
-  --tb-border-color:       #f2f2f2;
+  --tb-border-color:       rgba(0, 0, 0, 0.06);
+  --ambient-glow:          radial-gradient(circle at 80% 0%, rgba(15, 76, 74, 0.03) 0%, transparent 60%);
 }
 
 /* ─────────────────────────────────────────────────────────────────────────
    2. 미디엄(Medium) 다크 모드 컬러 시스템
    ───────────────────────────────────────────────────────────────────────── */
 html[data-mode="dark"] {
-  --bg-base:               #07080a; /* 사이버 다크 1톤 */
-  --body-bg:               #07080a;
+  --bg-base:               #0b0f19; /* 미드나잇 슬레이트 블루 */
+  --body-bg:               #0b0f19;
   --bg-glow-indigo:        hsl(243, 75%, 15%);
-  --sidebar-bg:            #07080a;
-  --sidebar-border-color:  rgba(255, 255, 255, 0.08);
-  --main-border-color:     rgba(255, 255, 255, 0.08);
+  --sidebar-bg:            #070a12;
+  --sidebar-border-color:  rgba(255, 255, 255, 0.05);
+  --main-border-color:     rgba(255, 255, 255, 0.05);
 
-  --accent:                #24a024; /* 다크모드 그린 */
-  --accent-glow:           rgba(36, 160, 36, 0.2);
-  --accent-hover:          #2fc02f;
+  --accent:                #0ea5e9; /* 네온 틸/시안 */
+  --accent-glow:           rgba(14, 165, 233, 0.15);
+  --accent-hover:          #38bdf8;
   --accent-danger:         #cf6679;
-  --accent-success:        #24a024;
+  --accent-success:        #0ea5e9;
 
   --link-color:            rgba(255, 255, 255, 0.92);
   --link-underline-color:  transparent;
   --text-color:            rgba(255, 255, 255, 0.92);
   --text-muted-color:      rgba(255, 255, 255, 0.55);
 
-  --btn-border-color:      rgba(255, 255, 255, 0.12);
-  --btn-hover-bg:          rgba(255, 255, 255, 0.04);
-  --btn-active-bg:         rgba(255, 255, 255, 0.08);
+  --btn-border-color:      rgba(255, 255, 255, 0.08);
+  --btn-hover-bg:          rgba(255, 255, 255, 0.03);
+  --btn-active-bg:         rgba(255, 255, 255, 0.06);
 
   --card-bg:               transparent;
-  --card-border-color:     rgba(255, 255, 255, 0.08);
+  --card-border-color:     rgba(255, 255, 255, 0.05);
+  --card-hover-bg:         rgba(255, 255, 255, 0.015);
   
-  --blockquote-border-color: #24a024;
-  --code-bg:               rgba(255, 255, 255, 0.03);
-  --code-color:            #24a024;
-  --tb-border-color:       rgba(255, 255, 255, 0.08);
+  --blockquote-border-color: #0ea5e9;
+  --code-bg:               rgba(255, 255, 255, 0.04);
+  --code-color:            #38bdf8;
+  --tb-border-color:       rgba(255, 255, 255, 0.05);
+  --ambient-glow:          radial-gradient(circle at 80% 10%, rgba(14, 165, 233, 0.08) 0%, rgba(20, 184, 166, 0.03) 50%, transparent 100%);
 }
 
 /* ─────────────────────────────────────────────────────────────────────────
@@ -93,6 +97,18 @@ body {
   background: var(--bg-base) !important;
   font-family: var(--font-body) !important;
   color: var(--text-color) !important;
+}
+
+/* 앰비언트 글로우 백그라운드 레이어 */
+body::after {
+  content: '' !important;
+  display: block !important;
+  position: fixed;
+  inset: 0;
+  background-image: var(--ambient-glow) !important;
+  pointer-events: none;
+  z-index: 1;
+  transition: background-image 0.4s ease;
 }
 
 #main-wrapper {
@@ -109,10 +125,10 @@ html[data-mode="dark"] body::before {
   display: block !important;
   position: fixed;
   inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E") !important;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.02'/%3E%3C/svg%3E") !important;
   pointer-events: none;
   z-index: 9999;
-  opacity: 0.035;
+  opacity: 0.03;
 }
 
 /* 데스크톱 환경에서 사이드바 좌측 배치 (미디엄 메인 메뉴바 컨셉) */
@@ -248,25 +264,27 @@ body:has(#post-wrapper) {
   background-color: transparent !important;
   border: none !important;
   box-shadow: none !important;
-  border-radius: 0 !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
-  margin: 0 !important;
 }
 
 #post-list > article,
 #post-list > div,
 .post-preview {
   border-bottom: 1px solid var(--main-border-color) !important;
-  padding: 2.5rem 0 !important;
+  padding: 2.2rem 1.2rem !important;
+  margin: 0 -1.2rem !important;
+  border-radius: 12px !important;
+  transition: background 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
 }
 
 #post-list > article:hover,
 #post-list > div:hover,
 .post-preview:hover {
-  transform: none !important;
+  background: var(--card-hover-bg) !important;
+  transform: translateX(4px) !important;
   box-shadow: none !important;
-  border-color: var(--main-border-color) !important;
+  border-bottom-color: transparent !important;
 }
 
 .post-preview .post-title {
@@ -513,41 +531,48 @@ html[data-mode="dark"] #mode-toggle::after {
   display: none !important;
 }
 
-/* 안티그라비티 상황줄 스타일 */
+/* 안티그라비티 상황줄 스타일 (Floating Glass Console) */
 .antigravity-status-bar {
   position: fixed !important;
-  bottom: 0 !important;
-  left: 0 !important;
-  right: 0 !important;
-  height: 36px !important;
-  background-color: #1a1a1e !important; /* 어두운 에디터 바 톤 */
-  border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
-  color: rgba(255, 255, 255, 0.6) !important;
+  bottom: 20px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  width: calc(100% - 320px) !important;
+  max-width: 800px !important;
+  height: 48px !important;
+  background: rgba(255, 255, 255, 0.7) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  border-radius: 99px !important;
+  color: #1a1a1a !important;
   z-index: 9999 !important;
   display: flex !important;
   align-items: center !important;
   justify-content: space-between !important;
-  padding: 0 1.5rem !important;
-  font-size: 0.75rem !important;
+  padding: 0 2rem !important;
+  font-size: 0.78rem !important;
   font-family: var(--font-mono) !important;
-  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08) !important;
+  transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease !important;
 }
 
-html:not([data-mode="dark"]) .antigravity-status-bar {
-  background-color: #f3f3f5 !important;
-  border-top: 1px solid #e0e0e6 !important;
-  color: #4a4a50 !important;
-  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05) !important;
+html[data-mode="dark"] .antigravity-status-bar {
+  background: rgba(11, 15, 25, 0.7) !important;
+  border: 1px solid rgba(255, 255, 255, 0.05) !important;
+  color: rgba(255, 255, 255, 0.85) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
 }
 
 .antigravity-status-bar .status-item {
   display: flex !important;
   align-items: center !important;
-  gap: 0.4rem !important;
+  gap: 0.5rem !important;
 }
 
 .antigravity-status-bar .status-label {
   font-weight: 500 !important;
+  opacity: 0.7 !important;
 }
 
 .antigravity-status-bar .status-value {
@@ -555,9 +580,27 @@ html:not([data-mode="dark"]) .antigravity-status-bar {
   font-weight: 600 !important;
 }
 
+/* 펄스 빔 애니메이션 도트 */
+.antigravity-status-bar .pulse-dot {
+  width: 6px !important;
+  height: 6px !important;
+  background-color: var(--accent) !important;
+  border-radius: 50% !important;
+  display: inline-block !important;
+  box-shadow: 0 0 8px var(--accent) !important;
+  animation: pulse-bar 2s infinite !important;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease !important;
+}
+
+@keyframes pulse-bar {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(14, 165, 233, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(14, 165, 233, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(14, 165, 233, 0); }
+}
+
 /* 본문 아래 바닥 상황줄 만큼의 여백 확보 */
 #main-wrapper {
-  margin-bottom: 45px !important;
+  margin-bottom: 80px !important;
 }
 
 /* 검색창 배경 및 텍스트 톤 통일 */
