@@ -95,6 +95,10 @@ body {
   color: var(--text-color) !important;
 }
 
+#main-wrapper {
+  padding-top: 2rem !important;
+}
+
 /* 다크 모드일 때 딥스페이스 플랫 단색 및 노이즈 텍스처 활성화 */
 html[data-mode="dark"] body {
   background: var(--bg-base) !important;
@@ -135,9 +139,11 @@ html[data-mode="dark"] body::before {
     margin-right: 0 !important;
     margin-left: var(--sidebar-width) !important;
     padding-left: 1.5rem !important;
+    padding-top: 2rem !important;
   }
   
   #topbar-wrapper {
+    display: none !important;
     left: var(--sidebar-width) !important;
     right: 0 !important;
     width: auto !important;
@@ -493,15 +499,12 @@ html[data-mode="dark"] #mode-toggle::after {
 /* ─────────────────────────────────────────────────────────────────────────
    10. 전체 화이트/다크 톤 및 뷰 일관성 (Inconsistency Cleanup)
    ───────────────────────────────────────────────────────────────────────── */
-/* 푸터 영역 배경 투명화 및 보더 제거 (검은색 띠 제거) */
+/* 푸터 영역 완전히 숨김 처리 */
 footer, 
 #footer, 
 .footer-wrapper,
 #tail-wrapper {
-  background: transparent !important;
-  background-color: transparent !important;
-  border-top: 1px solid var(--main-border-color) !important;
-  color: var(--text-muted-color) !important;
+  display: none !important;
 }
 
 /* 검색창 배경 및 텍스트 톤 통일 */
