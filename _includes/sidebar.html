@@ -57,8 +57,9 @@
 
   <div class="sidebar-bottom d-flex flex-wrap align-items-center justify-content-start w-100">
     {% unless site.theme_mode %}
-      <button type="button" class="btn btn-link nav-link" aria-label="Switch Mode" id="mode-toggle" onclick="toggleThemeMode()">
-        <i class="fas fa-adjust"></i>
+      <button type="button" class="btn btn-link nav-link" aria-label="Switch Mode" id="custom-theme-toggle" onclick="toggleThemeMode()">
+        <i id="theme-toggle-icon" class="fas fa-sun"></i>
+        <span id="theme-toggle-text">LIGHT</span>
       </button>
     {% endunless %}
   </div>
@@ -74,16 +75,57 @@
 <!-- #sidebar -->
 
 <script>
-  function toggleThemeMode() {
-    const html = document.documentElement;
-    const currentMode = html.getAttribute('data-mode') || 'light';
-    const newMode = currentMode === 'dark' ? 'light' : 'dark';
+  (function() {
+    // 1. Determine theme mode preference
+    const storedMode = localStorage.getItem('mode') || sessionStorage.getItem('mode') || document.documentElement.getAttribute('data-mode') || 'light';
     
-    // Set attributes for immediate styling reaction
-    html.setAttribute('data-mode', newMode);
-    localStorage.setItem('mode', newMode);
+    // 2. Apply theme state immediately to prevent layout flashes
+    document.documentElement.setAttribute('data-mode', storedMode);
     
-    // Dispatch theme change event so Chirpy scripts (if any) can synchronize
-    window.dispatchEvent(new Event('theme-change'));
-  }
+    // 3. Update toggle button icon/text dynamically
+    function updateToggleUI(mode) {
+      const icon = document.getElementById('theme-toggle-icon');
+      const text = document.getElementById('theme-toggle-text');
+      if (icon && text) {
+        if (mode === 'dark') {
+          icon.className = 'fas fa-moon';
+          text.textContent = 'DARK';
+        } else {
+          icon.className = 'fas fa-sun';
+          text.textContent = 'LIGHT';
+        }
+      }
+    }
+    
+    // 4. Expose the global toggle handler
+    window.toggleThemeMode = function() {
+      const html = document.documentElement;
+      const currentMode = html.getAttribute('data-mode') || 'light';
+      const newMode = currentMode === 'dark' ? 'light' : 'dark';
+      
+      html.setAttribute('data-mode', newMode);
+      
+      // Store settings across all typical keys/mechanisms for theme compatibility
+      localStorage.setItem('mode', newMode);
+      sessionStorage.setItem('mode', newMode);
+      localStorage.setItem('theme', newMode);
+      sessionStorage.setItem('theme', newMode);
+      
+      updateToggleUI(newMode);
+      
+      // Dispatch events for theme listener updates
+      window.dispatchEvent(new Event('theme-change'));
+    };
+    
+    // 5. Setup UI when DOM is ready
+    function initToggle() {
+      updateToggleUI(storedMode);
+    }
+    
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initToggle);
+    } else {
+      initToggle();
+    }
+  })();
 </script>
