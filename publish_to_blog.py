@@ -3,7 +3,14 @@ import sys
 import re
 import shutil
 import subprocess
+import io
 from datetime import datetime
+
+# Windows 콘솔 UTF-8 강제 (한국어·특수문자 출력 깨짐 방지)
+if hasattr(sys.stdout, 'buffer'):
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+if hasattr(sys.stderr, 'buffer'):
+    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace')
 
 def print_korean(msg, status="INFO"):
     colors = {
@@ -12,7 +19,7 @@ def print_korean(msg, status="INFO"):
         "ERROR": "\033[91m[오류]\033[0m"
     }
     prefix = colors.get(status, f"[{status}]")
-    print(f"{prefix} {msg}")
+    print(f"{prefix} {msg}", flush=True)
 
 def make_slug(title):
     # 영문, 숫자, 한글, 하이픈만 허용하고 공백은 하이픈으로 변경
@@ -46,8 +53,11 @@ def parse_front_matter(file_path):
     return title, date_str, content
 
 def run_command(cmd, cwd=None):
-    result = subprocess.run(cmd, shell=True, text=True, capture_output=True, cwd=cwd)
-    return result.returncode, result.stdout, result.stderr
+    # text=True 대신 bytes로 받아 utf-8 디코딩 (cp949 깨짐 방지)
+    result = subprocess.run(cmd, shell=True, capture_output=True, cwd=cwd)
+    stdout = result.stdout.decode('utf-8', errors='replace')
+    stderr = result.stderr.decode('utf-8', errors='replace')
+    return result.returncode, stdout, stderr
 
 def main():
     if len(sys.argv) < 2:
