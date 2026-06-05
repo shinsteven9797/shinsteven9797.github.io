@@ -14,7 +14,7 @@
   --font-serif: Georgia, Cambria, "Times New Roman", Times, serif;
 
   /* 사이드바 너비 */
-  --sidebar-width: 220px;
+  --sidebar-width: 260px;
 }
 
 /* ─────────────────────────────────────────────────────────────────────────
@@ -139,11 +139,11 @@ html[data-mode="dark"] body::before {
     border-left: none !important;
     border-right: 1px solid var(--sidebar-border-color) !important;
     width: var(--sidebar-width) !important;
-    padding-left: 3.2rem !important;
-    padding-right: 1.25rem !important;
+    padding-left: 1.75rem !important;
+    padding-right: 1.75rem !important;
     background: var(--sidebar-bg) !important;
     align-items: flex-start !important;
-    overflow-y: hidden !important; /* 스크롤바 제거 */
+    overflow-y: auto !important; /* 스크롤바 숨김 상태로 스크롤 허용 */
     scrollbar-width: none !important;
     -ms-overflow-style: none !important;
   }
@@ -155,7 +155,7 @@ html[data-mode="dark"] body::before {
   #main-wrapper {
     margin-right: 0 !important;
     margin-left: var(--sidebar-width) !important;
-    padding-left: 1.5rem !important;
+    padding-left: 3rem !important; /* 사이드바와 본문 사이의 간격 대폭 확보 */
     padding-top: 2rem !important;
   }
   
@@ -447,78 +447,71 @@ body:has(#post-wrapper) {
 #mode-toggle {
   display: block !important;
   position: relative !important;
-  width: 72px !important;
-  height: 32px !important;
-  border-radius: 6px !important;
+  width: 44px !important;
+  height: 24px !important;
+  border-radius: 99px !important; /* 원형 알약 캡슐 형태로 수정 */
   cursor: pointer !important;
   padding: 0 !important;
-  margin: 0.5rem 0 1rem 0 !important; /* 수직 기준선 정렬 */
+  margin: 0.5rem 0 !important; /* 여백 축소 */
   flex: none !important;
   align-self: flex-start !important;
-  border: 1px solid #dcdcdc !important;
-  background: #f2f2f2 !important;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08), inset 0 1px 0 #ffffff !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  background: #e2e8f0 !important;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.08) !important;
   overflow: hidden !important;
+  transition: background 0.25s ease, border-color 0.25s ease !important;
 }
 
 html[data-mode="dark"] #mode-toggle {
-  border-color: #121214 !important;
-  background: #202022 !important;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+  background: #1e293b !important;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3) !important;
 }
 
-/* 플레이트 안쪽 홈 (Recess) */
+/* 플레이트 안쪽 홈 비활성화 */
 #mode-toggle::before {
-  content: "" !important;
-  position: absolute !important;
-  top: 3px !important;
-  left: 3px !important;
-  right: 3px !important;
-  bottom: 3px !important;
-  border-radius: 4px !important;
-  background: #eaeaea !important;
-  border: 1px solid #d4d4d4 !important;
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.12) !important;
-  transition: all 0.25s ease !important;
+  display: none !important;
 }
 
-html[data-mode="dark"] #mode-toggle::before {
-  background: #141416 !important;
-  border-color: #1a1a1c !important;
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.5) !important;
-}
-
-/* 로커 스위치 버튼 본체 (Rocker Key) */
+/* 슬라이딩 토글 원형 핸들 */
 #mode-toggle::after {
   content: "" !important;
   position: absolute !important;
-  top: 4px !important;
-  left: 4px !important;
-  right: 4px !important;
-  bottom: 4px !important;
-  border-radius: 3px !important;
-  transition: transform 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94), background 0.25s ease, box-shadow 0.25s ease !important;
-  transform-style: preserve-3d !important;
+  top: 2px !important;
+  left: 2px !important;
+  width: 18px !important;
+  height: 18px !important;
+  border-radius: 50% !important;
+  background: #ffffff !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2) !important;
+  transition: transform 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94), background 0.25s ease !important;
+  transform: none !important;
 }
 
-/* ON 상태 (Light Mode - 우측이 올라오고 좌측이 들어간 3D 형태) */
-html:not([data-mode="dark"]) #mode-toggle::after {
-  background: linear-gradient(to right, #eaeaea 0%, #ffffff 50%, #ffffff 100%) !important;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15), inset 0 1px 0 #ffffff !important;
-  transform: perspective(100px) rotateY(-12deg) !important;
-}
+/* ON 상태 (Light Mode) 핸들 위치는 디폴트 (left: 2px) */
 
-/* OFF 상태 (Dark Mode - 좌측이 올라오고 우측이 들어간 3D 형태) */
+/* OFF 상태 (Dark Mode) 핸들 이동 및 액센트 글로우 */
 html[data-mode="dark"] #mode-toggle::after {
-  background: linear-gradient(to left, #202022 0%, #3a3a3c 50%, #444446 100%) !important;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
-  transform: perspective(100px) rotateY(12deg) !important;
+  transform: translateX(20px) !important;
+  background: var(--accent) !important;
+  box-shadow: 0 0 6px var(--accent) !important;
 }
 
-/* 사이드바 하단 소셜 아이콘이 화면 바닥에 닿지 않도록 방지 */
+/* 사이드바 하단 여백 및 구분선 정렬 */
 #sidebar .sidebar-bottom {
-  padding-bottom: 2rem !important;
-  margin-top: 0.5rem !important;
+  padding-bottom: 0.5rem !important;
+  margin-top: 0.75rem !important;
+  border-top: 1px solid var(--sidebar-border-color) !important;
+  padding-top: 0.5rem !important;
+  width: 100% !important;
+}
+
+/* 저작권 문구 패딩 축소로 위로 밀어올림 */
+#sidebar .sidebar-copyright {
+  font-size: 0.7rem !important;
+  color: var(--text-muted-color) !important;
+  padding: 0.25rem 0 0.5rem 0 !important;
+  line-height: 1.3 !important;
 }
 
 /* ─────────────────────────────────────────────────────────────────────────
