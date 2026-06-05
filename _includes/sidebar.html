@@ -1,7 +1,7 @@
 <!-- The Side Bar -->
 
-<aside aria-label="Sidebar" id="sidebar" class="d-flex flex-column align-items-center">
-  <header class="profile-wrapper text-center d-flex flex-column align-items-center">
+<aside aria-label="Sidebar" id="sidebar" class="d-flex flex-column align-items-start">
+  <header class="profile-wrapper text-start d-flex flex-column align-items-start">
     <a href="{{ '/' | relative_url }}" id="avatar" class="rounded-circle">
       {%- if site.avatar != empty and site.avatar -%}
         {%- capture avatar_url -%}
@@ -16,18 +16,18 @@
   </header>
   <!-- .profile-wrapper -->
 
-  <nav class="flex-column flex-grow-1 w-100 ps-0 text-center">
-    <ul class="nav w-100 d-flex flex-column align-items-center">
+  <nav class="flex-column flex-grow-1 w-100 ps-0 text-start">
+    <ul class="nav w-100 d-flex flex-column align-items-start">
       <!-- home -->
       <li class="nav-item w-100{% if page.layout == 'home' %}{{ " active" }}{% endif %}">
-        <a href="{{ '/' | relative_url }}" class="nav-link text-center w-100 d-block">
+        <a href="{{ '/' | relative_url }}" class="nav-link text-start w-100 d-block">
           <span>{{ site.data.locales[include.lang].tabs.home | upcase }}</span>
         </a>
       </li>
       <!-- the real tabs -->
       {% for tab in site.tabs %}
         <li class="nav-item w-100{% if tab.url == page.url %}{{ " active" }}{% endif %}">
-          <a href="{{ tab.url | relative_url }}" class="nav-link text-center w-100 d-block">
+          <a href="{{ tab.url | relative_url }}" class="nav-link text-start w-100 d-block">
             {% capture tab_name %}{{ tab.url | split: '/' }}{% endcapture %}
 
             <span>{{ site.data.locales[include.lang].tabs.[tab_name] | default: tab.title | upcase }}</span>
@@ -38,25 +38,35 @@
     </ul>
   </nav>
 
-  <div class="sidebar-bottom d-flex flex-wrap align-items-center justify-content-center w-100">
+  <div class="sidebar-bottom d-flex flex-wrap align-items-center justify-content-start w-100">
     {% unless site.theme_mode %}
-      <button type="button" class="btn btn-link nav-link" aria-label="Switch Mode" id="mode-toggle">
+      <button type="button" class="btn btn-link nav-link" aria-label="Switch Mode" id="mode-toggle" onclick="toggleThemeMode()">
         <i class="fas fa-adjust"></i>
       </button>
     {% endunless %}
   </div>
   <!-- .sidebar-bottom -->
 
-  <div class="sidebar-copyright text-center w-100" style="font-size: 0.72rem; color: var(--text-muted-color); padding: 0.5rem 0 1rem 0; line-height: 1.4;">
+  <div class="sidebar-copyright text-start w-100" style="font-size: 0.72rem; color: var(--text-muted-color); padding: 0.5rem 0 1rem 0; line-height: 1.4;">
     <p class="mb-0">
       {{- '©' }} <time>{{ 'now' | date: '%Y' }}</time>
-      {% if site.social.links %}
-        <a href="{{ site.social.links[0] }}" class="text-muted text-decoration-none">{{ site.social.name }}</a>
-      {% else %}
-        <em class="fst-normal">{{ site.social.name }}</em>
-      {% endif %}
+      <a href="mailto:seunghun.steven.shin@gmail.com" class="text-muted text-decoration-none">{{ site.social.name }}</a>
     </p>
   </div>
 </aside>
 <!-- #sidebar -->
 
+<script>
+  function toggleThemeMode() {
+    const html = document.documentElement;
+    const currentMode = html.getAttribute('data-mode') || 'light';
+    const newMode = currentMode === 'dark' ? 'light' : 'dark';
+    
+    // Set attributes for immediate styling reaction
+    html.setAttribute('data-mode', newMode);
+    localStorage.setItem('mode', newMode);
+    
+    // Dispatch theme change event so Chirpy scripts (if any) can synchronize
+    window.dispatchEvent(new Event('theme-change'));
+  }
+</script>

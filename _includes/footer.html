@@ -1,49 +1,38 @@
-<!-- The Footer -->
+<!-- Antigravity IDE Status Bar -->
+<footer id="antigravity-status-bar" class="antigravity-status-bar">
+  <div class="status-item status-token">
+    <span class="status-icon">🎟️</span>
+    <span class="status-label">토큰 사용량:</span>
+    <span class="status-value">8,420 / 10,000 (15.8% 잔여)</span>
+  </div>
+  
+  <div class="status-item status-reset">
+    <span class="status-icon">🕒</span>
+    <span class="status-label">재생성 대기:</span>
+    <span id="token-timer" class="status-value">45분 12초 남음</span>
+  </div>
 
-<footer
-  aria-label="Site Info"
-  class="
-    d-flex flex-column justify-content-center text-muted
-    flex-lg-row justify-content-lg-between align-items-lg-center pb-lg-3
-  "
->
-  <p>
-    {{- '©' }}
-    <time>{{ 'now' | date: '%Y' }}</time>
-
-    {% if site.social.links %}
-      <a href="{{ site.social.links[0] }}">{{ site.social.name }}</a>.
-    {% else %}
-      <em class="fst-normal">{{ site.social.name }}</em>.
-    {% endif %}
-
-    {% if site.data.locales[include.lang].copyright.brief %}
-      <span
-        data-bs-toggle="tooltip"
-        data-bs-placement="top"
-        title="{{ site.data.locales[include.lang].copyright.verbose }}"
-      >
-        {{- site.data.locales[include.lang].copyright.brief -}}
-      </span>
-    {% endif %}
-  </p>
-
-  <p>
-    {%- capture _platform -%}
-      <a href="https://jekyllrb.com" target="_blank" rel="noopener">Jekyll</a>
-    {%- endcapture -%}
-
-    {%- capture _theme -%}
-      <a
-        data-bs-toggle="tooltip"
-        data-bs-placement="top"
-        title="v{{ theme.version }}"
-        href="https://github.com/cotes2020/jekyll-theme-chirpy"
-        target="_blank"
-        rel="noopener"
-      >Chirpy</a>
-    {%- endcapture -%}
-
-    {{ site.data.locales[include.lang].meta | replace: ':PLATFORM', _platform | replace: ':THEME', _theme }}
-  </p>
+  <div class="status-item status-trend">
+    <span class="status-icon">📊</span>
+    <span class="status-label">주간 사용량:</span>
+    <span class="status-value">월 65% | 화 72% | 수 80% | 목 85% | 금 84.2%</span>
+  </div>
 </footer>
+
+<script>
+  (function() {
+    let secondsLeft = 45 * 60 + 12; // 45분 12초
+    const timerEl = document.getElementById('token-timer');
+    if (timerEl) {
+      const interval = setInterval(() => {
+        secondsLeft--;
+        if (secondsLeft <= 0) {
+          secondsLeft = 60 * 60; // 1시간 리셋
+        }
+        const mins = Math.floor(secondsLeft / 60);
+        const secs = secondsLeft % 60;
+        timerEl.textContent = `${mins}분 ${secs}초 남음`;
+      }, 1000);
+    }
+  })();
+</script>
