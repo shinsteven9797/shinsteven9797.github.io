@@ -168,7 +168,8 @@ body:has(#post-wrapper) {
   width: 64px !important; /* 72px -> 64px 축소 */
   height: 64px !important;
   transition: transform 0.3s ease;
-  margin-top: 1rem !important; /* 2rem -> 1rem 축소 */
+  margin: 1rem auto 0 auto !important; /* 가로 중앙 정렬 및 위 여백 */
+  display: block !important;
 }
 #sidebar #avatar:hover {
   transform: scale(1.05);
@@ -197,6 +198,9 @@ body:has(#post-wrapper) {
   transition: background 0.15s ease;
   margin: 0.1rem 0 !important; /* 0.2rem -> 0.1rem 축소 */
   padding: 0 0.5rem !important;
+  width: 100% !important;
+  display: flex !important;
+  justify-content: center !important;
 }
 
 #sidebar .nav-item.active,
@@ -211,6 +215,8 @@ body:has(#post-wrapper) {
   border-left: none !important;
   padding: 0.35rem 0 !important; /* 0.5rem -> 0.35rem 축소 */
   transition: color 0.15s ease;
+  text-align: center !important;
+  width: 100% !important;
 }
 
 #sidebar .nav-item.active .nav-link,
