@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="ko" data-mode="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lapis Theme Copycat Preview</title>
+  
+  <!-- 외부 폰트 및 아이콘 로드 (Cantarell + Noto Serif KR + FontAwesome) -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cantarell:ital,wght@0,400;0,700;1,400;1,700&family=Noto+Serif+KR:wght@400;700&family=JetBrains+Mono:wght@400;500;700&display=swap">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+
+  <style>
+    /* ─────────────────────────────────────────────────────────────────────────
+       1. Lapis 테마 컬러 시스템 및 폰트 토큰 정의
+       ───────────────────────────────────────────────────────────────────────── */
+    :root {
+      --font-body: 'Cantarell', 'Noto Serif KR', Georgia, Cambria, serif;
+      --font-heading: 'Cantarell', 'Noto Serif KR', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+
+      /* 사이드바 너비 */
+      --sidebar-width: 280px;
+    }
+
+    /* Lapis 라이트 모드 (Lapis Light) */
+    html:not([data-mode="dark"]),
+    html[data-mode="light"] {
+      --bg-color: #ffffff;
+      --side-bar-bg-color: #f6f8fa;
+      --border-color: rgba(0, 0, 0, 0.05);
+      
+      --primary-color: #4870ac; /* Lapis Blue */
+      --primary-hover: #385c90;
+      --primary-glow: rgba(72, 112, 172, 0.08);
+
+      --text-color: #40464f; /* Muted Slate Gray Text */
+      --text-muted: #7d8a9f;
+      --marker-color: #a2b6d4;
+
+      --block-bg-color: #f6f8fa;
+      --quote-bg-color: #f6f8fa;
+      --blockquote-border-color: #4870ac;
+      --highlight-color: #ffffb5c2;
+
+      /* 코드 하이라이트 (Winter is Coming Light) */
+      --code-keyword: #0033b3;
+      --code-string: #067d17;
+      --code-comment: #8c8c8c;
+      --code-number: #1750eb;
+      --code-tag: #0033b3;
+      --code-attr: #00627a;
+    }
+
+    /* Lapis 다크 모드 (Lapis Dark) */
+    html[data-mode="dark"] {
+      --bg-color: #1e222a; /* Deep Slate Gray-Blue */
+      --side-bar-bg-color: #181c24;
+      --border-color: rgba(255, 255, 255, 0.05);
+
+      --primary-color: #8393ad; /* Soft Slate Blue */
+      --primary-hover: #abbad4;
+      --primary-glow: rgba(131, 147, 173, 0.08);
+
+      --text-color: #e4e4e4e3; /* Soft White */
+      --text-muted: #7d8a9f;
+      --marker-color: #7d8a9f;
+
+      --block-bg-color: #080e1d;
+      --quote-bg-color: #2a2f3b;
+      --blockquote-border-color: #8393ad;
+      --highlight-color: #3e4451;
+
+      /* 코드 하이라이트 (Winter is Coming Dark) */
+      --code-keyword: #ec5f67;
+      --code-string: #99c794;
+      --code-comment: #65737e;
+      --code-number: #f99157;
+      --code-tag: #eb606b;
+      --code-attr: #fac863;
+    }
+
+    /* ─────────────────────────────────────────────────────────────────────────
+       2. 레이아웃 리셋 & 구조
+       ───────────────────────────────────────────────────────────────────────── */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      font-family: var(--font-body);
+      min-height: 100vh;
+      display: flex;
+      transition: background-color 0.25s ease, color 0.25s ease;
+      overflow-x: hidden;
+    }
+
+    /* ─────────────────────────────────────────────────────────────────────────
+       3. Lapis 사이드바 (Sidebar)
+       ───────────────────────────────────────────────────────────────────────── */
+    #sidebar {
+      width: var(--sidebar-width);
+      background-color: var(--side-bar-bg-color);
+      border-right: 1px solid var(--border-color);
+      height: 100vh;
+      position: fixed;
+      left: 0;
+      top: 0;
+      padding: 2rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: background-color 0.25s ease, border-color 0.25s ease;
+      z-index: 100;
+    }
+
+    .sidebar-brand {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .brand-avatar {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      border: 1px solid var(--border-color);
+      object-fit: cover;
+      margin-bottom: 0.5rem;
+    }
+
+    .brand-name {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 1.15rem;
+      color: var(--text-color);
+      text-decoration: none;
+    }
+
+    .brand-subtitle {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    .sidebar-menu {
+      list-style: none;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .menu-item a {
+      display: flex;
+      align-items: center;
+      padding: 0.45rem 0.75rem;
+      color: var(--text-color);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      border-radius: 6px;
+      transition: background-color 0.15s ease, color 0.15s ease;
+    }
+
+    .menu-item.active a,
+    .menu-item a:hover {
+      background-color: var(--block-bg-color);
+      color: var(--primary-color);
+    }
+
+    .menu-item a i {
+      margin-right: 0.75rem;
+      width: 16px;
+      text-align: center;
+      color: var(--text-muted);
+    }
+
+    .menu-item.active a i,
+    .menu-item a:hover i {
+      color: var(--primary-color);
+    }
+
+    /* 테마 토글 버튼 */
+    .sidebar-bottom {
+      border-top: 1px solid var(--border-color);
+      padding-top: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .theme-toggle-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 0.75rem;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      cursor: pointer;
+      font-family: var(--font-heading);
+      font-size: 0.78rem;
+      font-weight: 700;
+      width: fit-content;
+      transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+      outline: none;
+    }
+
+    .theme-toggle-btn:hover {
+      background-color: var(--primary-glow);
+      border-color: var(--primary-color);
+      color: var(--primary-color);
+    }
+
+    .theme-toggle-btn i {
+      font-size: 0.85rem;
+      transition: transform 0.3s ease;
+    }
+
+    .theme-toggle-btn:hover i {
+      transform: rotate(15deg);
+    }
+
+    .sidebar-copyright {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    /* ─────────────────────────────────────────────────────────────────────────
+       4. 메인 콘텐츠 영역 (Content Container)
+       ───────────────────────────────────────────────────────────────────────── */
+    #content-container {
+      margin-left: var(--sidebar-width);
+      flex: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 3rem 2rem;
+    }
+
+    main {
+      width: 100%;
+      max-width: 800px;
+    }
+
+    .post-header {
+      margin-bottom: 2rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 1.5rem;
+    }
+
+    .post-title {
+      font-family: var(--font-heading);
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--text-color);
+      margin-bottom: 0.75rem;
+      line-height: 1.3;
+    }
+
+    .post-meta {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .post-meta span i {
+      margin-right: 0.35rem;
+    }
+
+    /* ─────────────────────────────────────────────────────────────────────────
+       5. Lapis 타이포그래피 스타일 (Markdown Content)
+       ───────────────────────────────────────────────────────────────────────── */
+    .post-content {
+      font-size: 1.1rem;
+      line-height: 1.7;
+      text-align: justify;
+      color: var(--text-color);
+    }
+
+    .post-content p {
+      margin-bottom: 1.5rem;
+    }
+
+    /* H1, H2, H3, H4 */
+    .post-content h1,
+    .post-content h2,
+    .post-content h3,
+    .post-content h4 {
+      font-family: var(--font-heading);
+      color: var(--text-color);
+      margin-top: 2rem;
+      margin-bottom: 0.8rem;
+      font-weight: 700;
+      line-height: 1.4;
+    }
+
+    .post-content h1 {
+      font-size: 1.85rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.4rem;
+    }
+
+    .post-content h2 {
+      font-size: 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.3rem;
+    }
+
+    .post-content h2::before {
+      content: "";
+      display: inline-block;
+      width: 4px;
+      height: 1.1rem;
+      background-color: var(--primary-color);
+      margin-right: 8px;
+      vertical-align: middle;
+      border-radius: 2px;
+    }
+
+    .post-content h3 {
+      font-size: 1.25rem;
+    }
+
+    /* Bold/Strong */
+    .post-content strong,
+    .post-content b {
+      color: var(--primary-color);
+      font-weight: 700;
+    }
+
+    /* Links */
+    .post-content a {
+      color: var(--primary-color);
+      text-decoration: underline solid;
+      text-underline-offset: 4px;
+      text-decoration-thickness: 1px;
+      transition: color 0.15s ease;
+    }
+
+    .post-content a:hover {
+      color: var(--primary-hover);
+    }
+
+    /* Blockquote */
+    .post-content blockquote {
+      background-color: var(--quote-bg-color);
+      border-left: 4px solid var(--blockquote-border-color);
+      padding: 0.75rem 1.25rem;
+      margin: 1.5rem 0;
+      border-radius: 6px;
+      font-style: normal;
+    }
+
+    .post-content blockquote p {
+      margin-bottom: 0;
+    }
+
+    /* Code & Code block */
+    .post-content code {
+      font-family: var(--font-mono);
+      background-color: var(--block-bg-color);
+      padding: 0.2rem 0.45rem;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      color: var(--primary-color);
+    }
+
+    .post-content pre {
+      background-color: var(--block-bg-color);
+      border-radius: 8px;
+      padding: 1.2rem;
+      overflow-x: auto;
+      margin: 1.5rem 0;
+      border: 1px solid var(--border-color);
+    }
+
+    .post-content pre code {
+      padding: 0;
+      background-color: transparent;
+      color: var(--text-color);
+      font-size: 0.88rem;
+      display: block;
+      line-height: 1.6;
+    }
+
+    /* Syntax Highlighting */
+    .keyword { color: var(--code-keyword); font-weight: bold; }
+    .string { color: var(--code-string); }
+    .comment { color: var(--code-comment); font-style: italic; }
+    .number { color: var(--code-number); }
+    .tag { color: var(--code-tag); font-weight: bold; }
+    .attr { color: var(--code-attr); }
+
+    /* Lists */
+    .post-content ul,
+    .post-content ol {
+      margin-left: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .post-content li {
+      margin-bottom: 0.5rem;
+    }
+
+    .post-content ul li::marker {
+      color: var(--marker-color);
+    }
+
+    /* Image */
+    .post-content img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+      margin: 1.5rem auto;
+      display: block;
+      box-shadow: 0 4px 12px var(--border-color);
+    }
+
+    /* Table */
+    .post-content table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+    }
+
+    .post-content th,
+    .post-content td {
+      border: 1px solid var(--border-color);
+      padding: 0.6rem 1rem;
+      font-size: 0.95rem;
+      text-align: left;
+    }
+
+    .post-content th {
+      background-color: var(--block-bg-color);
+      font-weight: 700;
+    }
+
+    .post-content tr:nth-child(even) {
+      background-color: rgba(0, 0, 0, 0.01);
+    }
+
+    /* ─────────────────────────────────────────────────────────────────────────
+       6. 반응형 브레이크포인트 (Mobile/Tablet Support)
+       ───────────────────────────────────────────────────────────────────────── */
+    @media (max-width: 850px) {
+      body {
+        flex-direction: column;
+      }
+
+      #sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        border-right: none;
+        border-bottom: 1px solid var(--border-color);
+        padding: 1.5rem;
+      }
+
+      .sidebar-brand {
+        flex-direction: row;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1rem;
+      }
+
+      .brand-avatar {
+        width: 48px;
+        height: 48px;
+        margin-bottom: 0;
+      }
+
+      .sidebar-menu {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+      }
+
+      .menu-item a {
+        padding: 0.35rem 0.6rem;
+        font-size: 0.8rem;
+      }
+
+      .sidebar-bottom {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 0.75rem;
+      }
+
+      #content-container {
+        margin-left: 0;
+        padding: 2rem 1.25rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Lapis 사이드바 -->
+  <aside id="sidebar">
+    <div class="sidebar-brand">
+      <img class="brand-avatar" src="https://miro.medium.com/v2/da:true/resize:fill:176:176/0*G2_tBjFdrw3jbhCW" alt="Avatar">
+      <div>
+        <a href="#" class="brand-name">Seunghun Steven Shin</a>
+        <p class="brand-subtitle">AI, tech writing, and software engineering.</p>
+      </div>
+    </div>
+
+    <ul class="sidebar-menu">
+      <li class="menu-item active">
+        <a href="#"><i class="fa-solid fa-house"></i>HOME</a>
+      </li>
+      <li class="menu-item">
+        <a href="#"><i class="fa-solid fa-folder"></i>CATEGORIES</a>
+      </li>
+      <li class="menu-item">
+        <a href="#"><i class="fa-solid fa-tags"></i>TAGS</a>
+      </li>
+      <li class="menu-item">
+        <a href="#"><i class="fa-solid fa-user"></i>ABOUT</a>
+      </li>
+    </ul>
+
+    <div class="sidebar-bottom">
+      <button class="theme-toggle-btn" id="theme-toggle" onclick="toggleTheme()">
+        <i class="fa-solid fa-sun" id="toggle-icon"></i>
+        <span id="toggle-text">LIGHT</span>
+      </button>
+      <div class="sidebar-copyright">
+        &copy; 2026 Seunghun Steven Shin
+      </div>
+    </div>
+  </aside>
+
+  <!-- 메인 콘텐츠 영역 -->
+  <div id="content-container">
+    <main>
+      <article>
+        <header class="post-header">
+          <h1 class="post-title">Typora Lapis 테마 카피캣 검증 샘플 페이지</h1>
+          <div class="post-meta">
+            <span><i class="fa-solid fa-calendar"></i> 2026-06-05</span>
+            <span><i class="fa-solid fa-folder-open"></i> AI, Tech Writing</span>
+            <span><i class="fa-solid fa-tags"></i> lapis, jekyll, markdown</span>
+          </div>
+        </header>
+
+        <section class="post-content">
+          <p>
+            안녕하세요! 이 페이지는 사용자가 제안하신 <strong>Typora Lapis Theme (라피스 테마)</strong>의 레이아웃, 컬러 구성, 그리고 고유 타이포그래피 스타일을 완벽하게 모방하여 작동성을 사전 검증하는 <strong>단독 샘플 페이지</strong>입니다.
+          </p>
+
+          <blockquote>
+            Lapis 테마의 철학은 불필요한 장식과 과도한 특수효과를 과감히 걷어내고, 오직 <b>블루 톤(Blue Tones)의 차분한 색 조합</b>과 <b>인쇄물 스타일의 타이포그래피</b>에 집중하여 독자에게 최상의 가독성을 제공하는 것입니다.
+          </blockquote>
+
+          <p>
+            본 사전 검증을 통해 기존 Jekyll Chirpy 테마의 복잡성(PWA, heavy javascript, CSS 충돌)을 포기하고 Lapis 스타일의 경량화 블로그로 전환할지 여부를 직관적으로 판단하실 수 있습니다.
+          </p>
+
+          <h2>주요 디자인 특징 분석</h2>
+          <ul>
+            <li><strong>강조 텍스트 색상:</strong> 일반적인 볼드(`strong`) 처리는 두껍게만 표시되나, Lapis에서는 포인트 컬러인 Lapis Blue 색상을 입혀 시선을 사로잡습니다.</li>
+            <li><strong>링크 스타일:</strong> 링크는 단순 색상 변경을 넘어 <a href="https://theme.typora.io/theme/Lapis/">언더라인 밑줄(`underline solid`)</a>과 적절한 높이 편차(`underline-offset`)를 두어 세련되게 처리합니다.</li>
+            <li><strong>부드러운 블록 요소:</strong> 인용구(`blockquote`)와 코드 영역은 살짝 꺾인 6px 라운딩 테두리와 플랫한 회색조 배경을 가집니다.</li>
+          </ul>
+
+          <h2>코드 블록 스타일링 (VSCode "Winter is Coming" 테마 조합)</h2>
+          <p>
+            Lapis 테마에 최적화된 고정폭 글꼴 `JetBrains Mono`를 사용하여 소스 코드를 미려하게 렌더링합니다.
+          </p>
+
+          <pre><code><span class="comment">// Lapis 테마 모드 전환 비즈니스 로직 예제</span>
+<span class="keyword">function</span> <span class="keyword">toggleTheme</span>() {
+  <span class="keyword">const</span> html = document.documentElement;
+  <span class="keyword">const</span> currentMode = html.getAttribute(<span class="string">'data-mode'</span>) || <span class="string">'light'</span>;
+  <span class="keyword">const</span> newMode = currentMode === <span class="string">'dark'</span> ? <span class="string">'light'</span> : <span class="string">'dark'</span>;
+
+  <span class="comment">// 테마 즉시 교체</span>
+  html.setAttribute(<span class="string">'data-mode'</span>, newMode);
+  localStorage.setItem(<span class="string">'mode'</span>, newMode);
+  
+  <span class="comment">// UI 리프레시</span>
+  updateToggleUI(newMode);
+}</code></pre>
+
+          <h2>테이블 렌더링 검증</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>요소 구분 (Feature)</th>
+                <th>기존 Chirpy 테마</th>
+                <th>제안하는 Lapis 카피캣 테마</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>배경색 스타일</strong></td>
+                <td>단색 위주 어두운 톤</td>
+                <td>차분한 청회색 톤 (Slate Gray & White)</td>
+              </tr>
+              <tr>
+                <td><strong>JS 의존도</strong></td>
+                <td>매우 높음 (PWA, Search, dynamic scripts)</td>
+                <td>최소화 (테마 스위치만 순수 JS 작동)</td>
+              </tr>
+              <tr>
+                <td><strong>글씨체 (Typography)</strong></td>
+                <td>Pretendard (고딕)</td>
+                <td>Cantarell + Noto Serif KR (세리프 결합)</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p>
+            위 스위치 버튼을 눌러보시면, 화면 배경 및 사이드바 배경 색상이 <strong>Lapis 오리지널 스펙 색상(Light: #ffffff / Dark: #1e222a)</strong>으로 깜빡임과 지연 없이 즉각적으로 부드럽게 스위칭되는 것을 확인할 수 있습니다.
+          </p>
+        </section>
+      </article>
+    </main>
+  </div>
+
+  <script>
+    // 초기 로딩 시 localStorage에서 모드 동기화
+    (function() {
+      const storedMode = localStorage.getItem('mode') || 'light';
+      document.documentElement.setAttribute('data-mode', storedMode);
+      
+      function initToggle() {
+        updateToggleUI(storedMode);
+      }
+      
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initToggle);
+      } else {
+        initToggle();
+      }
+    })();
+
+    function updateToggleUI(mode) {
+      const icon = document.getElementById('toggle-icon');
+      const text = document.getElementById('toggle-text');
+      if (icon && text) {
+        if (mode === 'dark') {
+          icon.className = 'fa-solid fa-moon';
+          text.textContent = 'DARK';
+        } else {
+          icon.className = 'fa-solid fa-sun';
+          text.textContent = 'LIGHT';
+        }
+      }
+    }
+
+    function toggleTheme() {
+      const html = document.documentElement;
+      const currentMode = html.getAttribute('data-mode') || 'light';
+      const newMode = currentMode === 'dark' ? 'light' : 'dark';
+
+      html.setAttribute('data-mode', newMode);
+      localStorage.setItem('mode', newMode);
+      
+      updateToggleUI(newMode);
+    }
+  </script>
+</body>
+</html>

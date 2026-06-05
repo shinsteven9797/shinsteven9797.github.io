@@ -3,91 +3,91 @@
 
 @use 'main{%- if jekyll.environment == "production" -%}.bundle{%- endif -%}';
 
-@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cantarell:ital,wght@0,400;0,700;1,400;1,700&family=Noto+Serif+KR:wght@400;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
 
 :root {
-  /* 폰트 정의 */
-  --font-body: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
-  --font-heading: 'Montserrat', 'Pretendard', sans-serif;
+  /* Lapis Font Families */
+  --font-body: 'Cantarell', 'Noto Serif KR', Georgia, Cambria, serif;
+  --font-heading: 'Cantarell', 'Noto Serif KR', sans-serif;
   --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
-  --font-serif: Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-serif: 'Noto Serif KR', Georgia, Cambria, serif;
 
   /* 사이드바 너비 */
   --sidebar-width: 260px;
 }
 
 /* ─────────────────────────────────────────────────────────────────────────
-   1. 미디엄(Medium) 라이트 모드 컬러 시스템 (기본값)
+   1. Lapis 라이트 모드 (Lapis Light)
    ───────────────────────────────────────────────────────────────────────── */
 :root, html:not([data-mode="dark"]), html[data-mode="light"] {
-  --bg-base:               #faf9f6; /* 알라바스터 웜그레이 */
-  --body-bg:               #faf9f6;
-  --sidebar-bg:            #ffffff;
-  --sidebar-border-color:  rgba(0, 0, 0, 0.06);
-  --main-border-color:     rgba(0, 0, 0, 0.06);
+  --bg-base:               #ffffff; /* Pure White */
+  --body-bg:               #ffffff;
+  --sidebar-bg:            #f6f8fa; /* Soft Gray Sidebar */
+  --sidebar-border-color:  rgba(0, 0, 0, 0.05);
+  --main-border-color:     rgba(0, 0, 0, 0.05);
 
-  --accent:                #0f4c4a; /* 딥 틸 (주요 버튼/포인트) */
-  --accent-glow:           rgba(15, 76, 74, 0.15);
-  --accent-hover:          #0b3635;
-  --accent-danger:         #d32f2f;
-  --accent-success:        #0f4c4a;
+  --accent:                #4870ac; /* Lapis Blue */
+  --accent-glow:           rgba(72, 112, 172, 0.08);
+  --accent-hover:          #385c90;
+  --accent-danger:         #cf6679;
+  --accent-success:        #4870ac;
 
-  --link-color:            #1a1a1a;
+  --link-color:            #4870ac;
   --link-underline-color:  transparent;
-  --text-color:            #1a1a1a;
-  --text-muted-color:      #606060;
+  --text-color:            #40464f; /* Muted Slate Gray */
+  --text-muted-color:      #7d8a9f;
 
-  --btn-border-color:      rgba(0, 0, 0, 0.06);
-  --btn-hover-bg:          rgba(0, 0, 0, 0.025);
-  --btn-active-bg:         rgba(0, 0, 0, 0.05);
+  --btn-border-color:      rgba(0, 0, 0, 0.05);
+  --btn-hover-bg:          #f6f8fa;
+  --btn-active-bg:         rgba(0, 0, 0, 0.04);
 
   --card-bg:               transparent;
-  --card-border-color:     rgba(0, 0, 0, 0.06);
-  --card-hover-bg:         rgba(0, 0, 0, 0.015);
+  --card-border-color:     rgba(0, 0, 0, 0.05);
+  --card-hover-bg:         rgba(72, 112, 172, 0.02);
   
-  --blockquote-border-color: #0f4c4a;
-  --code-bg:               rgba(0, 0, 0, 0.03);
-  --code-color:            #c2185b;
-  --tb-border-color:       rgba(0, 0, 0, 0.06);
-  --ambient-glow:          radial-gradient(circle at 80% 0%, rgba(15, 76, 74, 0.03) 0%, transparent 60%);
+  --blockquote-border-color: #4870ac;
+  --blockquote-bg-color:   #f6f8fa;
+  --code-bg:               #f6f8fa;
+  --code-color:            #4870ac;
+  --tb-border-color:       rgba(0, 0, 0, 0.05);
+  --ambient-glow:          none;
 }
 
 /* ─────────────────────────────────────────────────────────────────────────
-   2. 미디엄(Medium) 다크 모드 컬러 시스템
+   2. Lapis 다크 모드 (Lapis Dark)
    ───────────────────────────────────────────────────────────────────────── */
 html[data-mode="dark"] {
-  --bg-base:               #0b0f19; /* 미드나잇 슬레이트 블루 */
-  --body-bg:               #0b0f19;
-  --bg-glow-indigo:        hsl(243, 75%, 15%);
-  --sidebar-bg:            #070a12;
+  --bg-base:               #1e222a; /* Deep Slate Gray-Blue */
+  --body-bg:               #1e222a;
+  --sidebar-bg:            #181c24; /* Darker Sidebar */
   --sidebar-border-color:  rgba(255, 255, 255, 0.05);
   --main-border-color:     rgba(255, 255, 255, 0.05);
 
-  --accent:                #0ea5e9; /* 네온 틸/시안 */
-  --accent-glow:           rgba(14, 165, 233, 0.15);
-  --accent-hover:          #38bdf8;
+  --accent:                #8393ad; /* Light Slate Blue */
+  --accent-glow:           rgba(131, 147, 173, 0.08);
+  --accent-hover:          #abbad4;
   --accent-danger:         #cf6679;
-  --accent-success:        #0ea5e9;
+  --accent-success:        #8393ad;
 
-  --link-color:            rgba(255, 255, 255, 0.92);
+  --link-color:            #8393ad;
   --link-underline-color:  transparent;
-  --text-color:            rgba(255, 255, 255, 0.92);
-  --text-muted-color:      rgba(255, 255, 255, 0.55);
+  --text-color:            #e4e4e4e3; /* Soft White */
+  --text-muted-color:      #7d8a9f;
 
-  --btn-border-color:      rgba(255, 255, 255, 0.08);
-  --btn-hover-bg:          rgba(255, 255, 255, 0.03);
-  --btn-active-bg:         rgba(255, 255, 255, 0.06);
+  --btn-border-color:      rgba(255, 255, 255, 0.05);
+  --btn-hover-bg:          #181c24;
+  --btn-active-bg:         rgba(255, 255, 255, 0.04);
 
   --card-bg:               transparent;
   --card-border-color:     rgba(255, 255, 255, 0.05);
-  --card-hover-bg:         rgba(255, 255, 255, 0.015);
+  --card-hover-bg:         rgba(131, 147, 173, 0.02);
   
-  --blockquote-border-color: #0ea5e9;
-  --code-bg:               rgba(255, 255, 255, 0.04);
-  --code-color:            #38bdf8;
+  --blockquote-border-color: #8393ad;
+  --blockquote-bg-color:   #2a2f3b;
+  --code-bg:               #080e1d;
+  --code-color:            #abbad4;
   --tb-border-color:       rgba(255, 255, 255, 0.05);
-  --ambient-glow:          radial-gradient(circle at 80% 10%, rgba(14, 165, 233, 0.08) 0%, rgba(20, 184, 166, 0.03) 50%, transparent 100%);
+  --ambient-glow:          none;
 }
 
 /* ─────────────────────────────────────────────────────────────────────────
@@ -99,36 +99,8 @@ body {
   color: var(--text-color) !important;
 }
 
-/* 앰비언트 글로우 백그라운드 레이어 */
-body::after {
-  content: '' !important;
-  display: block !important;
-  position: fixed;
-  inset: 0;
-  background-image: var(--ambient-glow) !important;
-  pointer-events: none;
-  z-index: 1;
-  transition: background-image 0.4s ease;
-}
-
 #main-wrapper {
   padding-top: 2rem !important;
-}
-
-/* 다크 모드일 때 딥스페이스 플랫 단색 및 노이즈 텍스처 활성화 */
-html[data-mode="dark"] body {
-  background: var(--bg-base) !important;
-}
-
-html[data-mode="dark"] body::before {
-  content: '' !important;
-  display: block !important;
-  position: fixed;
-  inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.02'/%3E%3C/svg%3E") !important;
-  pointer-events: none;
-  z-index: 9999;
-  opacity: 0.03;
 }
 
 /* 데스크톱 환경에서 사이드바 좌측 배치 (미디엄 메인 메뉴바 컨셉) */
@@ -272,19 +244,17 @@ body:has(#post-wrapper) {
 #post-list > div,
 .post-preview {
   border-bottom: 1px solid var(--main-border-color) !important;
-  padding: 2.2rem 1.2rem !important;
-  margin: 0 -1.2rem !important;
-  border-radius: 12px !important;
-  transition: background 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+  padding: 1.8rem 1.0rem !important;
+  margin: 0 -1.0rem !important;
+  border-radius: 6px !important;
+  transition: background-color 0.2s ease !important;
 }
 
 #post-list > article:hover,
 #post-list > div:hover,
 .post-preview:hover {
   background: var(--card-hover-bg) !important;
-  transform: translateX(4px) !important;
-  box-shadow: none !important;
-  border-bottom-color: transparent !important;
+  border-bottom-color: var(--main-border-color) !important;
 }
 
 .post-preview .post-title {
@@ -364,18 +334,36 @@ body:has(#post-wrapper) {
 .post h2 { font-size: 1.8rem !important; }
 .post h3 { font-size: 1.45rem !important; }
 
-/* 미디엄 스타일 블록 인용구 */
+/* Lapis 스타일 블록 인용구 */
 .post-content blockquote {
-  background: transparent !important;
-  border-radius: 0 !important;
+  background: var(--blockquote-bg-color) !important;
+  border-radius: 6px !important;
   border: none !important;
-  border-left: 3px solid var(--blockquote-border-color) !important;
+  border-left: 4px solid var(--blockquote-border-color) !important;
   box-shadow: none !important;
-  padding: 0 0 0 1.25rem !important;
-  margin: 2rem 0 !important;
-  font-style: italic !important;
+  padding: 0.75rem 1.25rem !important;
+  margin: 1.5rem 0 !important;
+  font-style: normal !important;
   color: var(--text-color) !important;
-  font-size: 1.25rem !important;
+  font-size: 1.05rem !important;
+}
+
+/* Lapis 스타일 볼드 및 링크 */
+strong, b {
+  color: var(--accent) !important;
+  font-weight: bold !important;
+}
+
+.post-content a {
+  color: var(--accent) !important;
+  text-decoration: underline solid !important;
+  text-underline-offset: 4px !important;
+  text-decoration-thickness: 1px !important;
+  transition: color 0.15s ease !important;
+}
+
+.post-content a:hover {
+  color: var(--accent-hover) !important;
 }
 
 /* ─────────────────────────────────────────────────────────────────────────
@@ -499,76 +487,14 @@ body:has(#post-wrapper) {
   display: none !important;
 }
 
-/* 안티그라비티 상황줄 스타일 (Floating Glass Console) */
-.antigravity-status-bar {
-  position: fixed !important;
-  bottom: 20px !important;
-  left: 50% !important;
-  transform: translateX(-50%) !important;
-  width: calc(100% - 320px) !important;
-  max-width: 800px !important;
-  height: 48px !important;
-  background: rgba(255, 255, 255, 0.7) !important;
-  backdrop-filter: blur(16px) !important;
-  -webkit-backdrop-filter: blur(16px) !important;
-  border: 1px solid rgba(0, 0, 0, 0.08) !important;
-  border-radius: 99px !important;
-  color: #1a1a1a !important;
-  z-index: 9999 !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  padding: 0 2rem !important;
-  font-size: 0.78rem !important;
-  font-family: var(--font-mono) !important;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08) !important;
-  transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease !important;
-}
-
-html[data-mode="dark"] .antigravity-status-bar {
-  background: rgba(11, 15, 25, 0.7) !important;
-  border: 1px solid rgba(255, 255, 255, 0.05) !important;
-  color: rgba(255, 255, 255, 0.85) !important;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
-}
-
-.antigravity-status-bar .status-item {
-  display: flex !important;
-  align-items: center !important;
-  gap: 0.5rem !important;
-}
-
-.antigravity-status-bar .status-label {
-  font-weight: 500 !important;
-  opacity: 0.7 !important;
-}
-
-.antigravity-status-bar .status-value {
-  color: var(--accent) !important;
-  font-weight: 600 !important;
-}
-
-/* 펄스 빔 애니메이션 도트 */
-.antigravity-status-bar .pulse-dot {
-  width: 6px !important;
-  height: 6px !important;
-  background-color: var(--accent) !important;
-  border-radius: 50% !important;
-  display: inline-block !important;
-  box-shadow: 0 0 8px var(--accent) !important;
-  animation: pulse-bar 2s infinite !important;
-  transition: background-color 0.3s ease, box-shadow 0.3s ease !important;
-}
-
-@keyframes pulse-bar {
-  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(14, 165, 233, 0.7); }
-  70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(14, 165, 233, 0); }
-  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(14, 165, 233, 0); }
-}
-
-/* 본문 아래 바닥 상황줄 만큼의 여백 확보 */
-#main-wrapper {
-  margin-bottom: 80px !important;
+/* ─────────────────────────────────────────────────────────────────────────
+   10. 전체 화이트/다크 톤 및 뷰 일관성 (Inconsistency Cleanup)
+   ───────────────────────────────────────────────────────────────────────── */
+/* 푸터 영역 완전히 숨김 처리 (기본 테마 푸터 숨김) */
+#footer, 
+.footer-wrapper,
+#tail-wrapper {
+  display: none !important;
 }
 
 /* 검색창 배경 및 텍스트 톤 통일 */
