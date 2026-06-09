@@ -63,7 +63,7 @@
 
   <div class="sidebar-bottom d-flex flex-wrap align-items-center justify-content-start w-100">
     {% unless site.theme_mode %}
-      <button type="button" class="btn btn-link nav-link" aria-label="Switch Mode" id="custom-theme-toggle" onclick="toggleThemeMode()">
+      <button type="button" class="btn btn-link nav-link" aria-label="Switch Mode" id="custom-theme-toggle" style="position: relative !important; z-index: 9999 !important; pointer-events: auto !important; cursor: pointer !important; text-decoration: none !important;">
         <i id="theme-toggle-icon" class="fas fa-sun"></i>
         <span id="theme-toggle-text">LIGHT</span>
       </button>
@@ -81,17 +81,13 @@
 <!-- #sidebar -->
 
 <script>
+  // ── 1. 수동 테마 토글 엔진 (물리적 클릭 유효성 보장) ─────────────────────────────────
   (function() {
-    // 1. Determine theme mode preference
-    const storedMode = localStorage.getItem('mode') || sessionStorage.getItem('mode') || document.documentElement.getAttribute('data-mode') || 'light';
-    
-    // 2. Apply theme state immediately to prevent layout flashes
-    document.documentElement.setAttribute('data-mode', storedMode);
-    
-    // 3. Update toggle button icon/text dynamically
+    const toggleBtn = document.getElementById('custom-theme-toggle');
+    const icon = document.getElementById('theme-toggle-icon');
+    const text = document.getElementById('theme-toggle-text');
+
     function updateToggleUI(mode) {
-      const icon = document.getElementById('theme-toggle-icon');
-      const text = document.getElementById('theme-toggle-text');
       if (icon && text) {
         if (mode === 'dark') {
           icon.className = 'fas fa-moon';
@@ -102,36 +98,85 @@
         }
       }
     }
-    
-    // 4. Expose the global toggle handler
-    window.toggleThemeMode = function() {
-      const html = document.documentElement;
-      const currentMode = html.getAttribute('data-mode') || 'light';
-      const newMode = currentMode === 'dark' ? 'light' : 'dark';
-      
-      html.setAttribute('data-mode', newMode);
-      
-      // Store settings across all typical keys/mechanisms for theme compatibility
-      localStorage.setItem('mode', newMode);
-      sessionStorage.setItem('mode', newMode);
-      localStorage.setItem('theme', newMode);
-      sessionStorage.setItem('theme', newMode);
-      
-      updateToggleUI(newMode);
-      
-      // Dispatch events for theme listener updates
+
+    function applyThemeMode(mode) {
+      document.documentElement.setAttribute('data-mode', mode);
+      localStorage.setItem('mode', mode);
+      localStorage.setItem('theme', mode);
+      updateToggleUI(mode);
       window.dispatchEvent(new Event('theme-change'));
-    };
-    
-    // 5. Setup UI when DOM is ready
-    function initToggle() {
-      updateToggleUI(storedMode);
     }
-    
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initToggle);
-    } else {
-      initToggle();
+
+    // 페이지 로드 시 즉시 초기 테마 로드
+    const storedMode = localStorage.getItem('mode') || document.documentElement.getAttribute('data-mode') || 'light';
+    applyThemeMode(storedMode);
+
+    if (toggleBtn) {
+      toggleBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        const currentMode = document.documentElement.getAttribute('data-mode') || 'light';
+        const newMode = currentMode === 'dark' ? 'light' : 'dark';
+        applyThemeMode(newMode);
+      });
+    }
+  })();
+
+  // ── 2. 경량 바닐라 JS 검색 엔진 (탑바 삭제에 따른 JS 크래시 우회) ───────────────────
+  (function() {
+    const searchInput = document.getElementById('search-input');
+    const resultWrapper = document.getElementById('search-result-wrapper');
+    const resultsContainer = document.getElementById('search-results');
+    let searchData = null;
+
+    async function initSearch() {
+      if (searchData) return;
+      try {
+        const resp = await fetch('{{ "/assets/js/data/search.json" | relative_url }}');
+        searchData = await resp.json();
+      } catch (err) {
+        console.error('Failed to load search data:', err);
+      }
+    }
+
+    if (searchInput && resultWrapper && resultsContainer) {
+      searchInput.addEventListener('focus', initSearch);
+      searchInput.addEventListener('input', function() {
+        const query = searchInput.value.trim().toLowerCase();
+        if (!query) {
+          resultWrapper.classList.add('d-none');
+          resultsContainer.innerHTML = '';
+          return;
+        }
+
+        if (!searchData) return;
+
+        const matched = searchData.filter(post => 
+          post.title.toLowerCase().includes(query) || 
+          post.content.toLowerCase().includes(query)
+        ).slice(0, 5); // 최대 5개 노출
+
+        if (matched.length === 0) {
+          resultsContainer.innerHTML = '<div class="text-muted p-2" style="font-size: 0.75rem;">검색 결과가 없습니다.</div>';
+        } else {
+          resultsContainer.innerHTML = matched.map(post => `
+            <a href="${post.url}" class="d-block p-2 text-decoration-none" style="color: var(--text-color); border-bottom: 1px solid var(--sidebar-border-color); border-radius: 4px; transition: background 0.2s;" onmouseover="this.style.background='var(--btn-active-bg)'" onmouseout="this.style.background='transparent'">
+              <strong style="color: var(--accent); font-size: 0.825rem;">${post.title}</strong>
+              <div class="text-muted" style="font-size: 0.7rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px;">
+                ${post.content.substring(0, 60)}...
+              </div>
+            </a>
+          `).join('');
+        }
+        resultWrapper.classList.remove('d-none');
+      });
+
+      // 영역 외 클릭 시 검색결과 닫기
+      document.addEventListener('click', function(e) {
+        if (!searchInput.contains(e.target) && !resultWrapper.contains(e.target)) {
+          resultWrapper.classList.add('d-none');
+        }
+      });
     }
   })();
 </script>
