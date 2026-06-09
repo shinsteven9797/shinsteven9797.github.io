@@ -6,45 +6,44 @@
   <title>Antigravity Premium Web Writer (WYSIWYG)</title>
   
   <!-- 외부 리소스 로드 -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cantarell:ital,wght@0,400;0,700;1,400;1,700&family=Noto+Serif+KR:wght@400;700&family=JetBrains+Mono:wght@400;500;700&display=swap">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.2.0/css/all.min.css">
 
   <style>
     /* ─────────────────────────────────────────────────────────────────────────
-       1. 디자인 테마 토큰 (Nordic Teal & Slate 기반)
+       1. 디자인 테마 토큰 (Lapis Theme 기반)
        ───────────────────────────────────────────────────────────────────────── */
     :root {
-      --font-body: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
-      --font-heading: 'Montserrat', 'Pretendard', sans-serif;
+      --font-body: 'Cantarell', 'Noto Serif KR', Georgia, Cambria, serif;
+      --font-heading: 'Cantarell', 'Noto Serif KR', sans-serif;
       --font-mono: 'JetBrains Mono', monospace;
-      --font-serif: Georgia, Cambria, serif;
+      --font-serif: 'Noto Serif KR', Georgia, Cambria, serif;
     }
     
     html:not([data-mode="dark"]),
     html[data-mode="light"] {
-      --bg-base:               #faf9f6;
-      --panel-bg:              #ffffff;
-      --border-color:          rgba(0, 0, 0, 0.08);
-      --accent:                #0f4c4a;
-      --accent-hover:          #0b3635;
-      --accent-glow:           rgba(15, 76, 74, 0.1);
-      --text-color:            #1a1a1a;
-      --text-muted:            #606060;
-      --editor-shadow:         0 10px 30px rgba(0, 0, 0, 0.04);
+      --bg-base:               #ffffff; /* Lapis Light Base */
+      --panel-bg:              #f6f8fa; /* Soft Gray Ribbon Panel */
+      --border-color:          rgba(0, 0, 0, 0.05);
+      --accent:                #4870ac; /* Lapis Blue */
+      --accent-hover:          #385c90;
+      --accent-glow:           rgba(72, 112, 172, 0.08);
+      --text-color:            #40464f; /* Muted Slate Gray Text */
+      --text-muted:            #7d8a9f;
+      --editor-shadow:         none;
       --btn-hover:             rgba(0, 0, 0, 0.03);
     }
     
     html[data-mode="dark"] {
-      --bg-base:               #0b0f19;
-      --panel-bg:              #0f1422;
-      --border-color:          rgba(255, 255, 255, 0.08);
-      --accent:                #0ea5e9;
-      --accent-hover:          #38bdf8;
-      --accent-glow:           rgba(14, 165, 233, 0.15);
-      --text-color:            rgba(255, 255, 255, 0.95);
-      --text-muted:            rgba(255, 255, 255, 0.55);
-      --editor-shadow:         0 15px 40px rgba(0, 0, 0, 0.3);
+      --bg-base:               #1e222a; /* Lapis Dark Base */
+      --panel-bg:              #181c24; /* Dark Ribbon Panel */
+      --border-color:          rgba(255, 255, 255, 0.05);
+      --accent:                #8393ad; /* Light Slate Blue */
+      --accent-hover:          #abbad4;
+      --accent-glow:           rgba(131, 147, 173, 0.08);
+      --text-color:            #e4e4e4e3; /* Soft White */
+      --text-muted:            #7d8a9f;
+      --editor-shadow:         none;
       --btn-hover:             rgba(255, 255, 255, 0.05);
     }
 
@@ -282,18 +281,36 @@
 
     .editing-area h1 { font-size: 2rem; }
     .editing-area h2 { font-size: 1.6rem; }
+    .editing-area h2::before {
+      content: "";
+      display: inline-block;
+      width: 4px;
+      height: 1.1rem;
+      background-color: var(--accent);
+      margin-right: 8px;
+      vertical-align: middle;
+      border-radius: 2px;
+    }
     .editing-area h3 { font-size: 1.3rem; }
 
     .editing-area p {
       margin-bottom: 1.5rem;
     }
 
+    .editing-area strong, 
+    .editing-area b {
+      color: var(--accent);
+      font-weight: bold;
+    }
+
     .editing-area blockquote {
-      border-left: 3px solid var(--accent);
-      padding-left: 1.25rem;
+      background: var(--panel-bg);
+      border-radius: 6px;
+      border-left: 4px solid var(--accent);
+      padding: 0.75rem 1.25rem;
       margin: 1.5rem 0;
-      font-style: italic;
-      color: var(--text-muted);
+      font-style: normal;
+      color: var(--text-color);
     }
 
     .editing-area img {
@@ -346,7 +363,7 @@
   <header>
     <div class="brand">
       <i class="fa-solid fa-feather-pointed brand-logo"></i>
-      <span>Antigravity Premium Writer</span>
+      <span>Antigravity Lapis Writer</span>
     </div>
     
     <div class="actions-group">
@@ -406,10 +423,9 @@
 
         <!-- 폰트 계열 -->
         <select class="ribbon-select" onchange="formatDoc('fontName', this.value)">
-          <option value="Georgia">바탕체 (Georgia Serif)</option>
-          <option value="Pretendard">고딕체 (Pretendard Sans)</option>
-          <option value="Montserrat">헤더용 (Montserrat)</option>
-          <option value="JetBrains Mono">코드용 (Mono)</option>
+          <option value="Cantarell">기본 본문 (Cantarell)</option>
+          <option value="Noto Serif KR">한글 바탕체 (Noto Serif KR)</option>
+          <option value="JetBrains Mono">코드용 (JetBrains Mono)</option>
         </select>
 
         <!-- 글씨 크기 (정밀) -->

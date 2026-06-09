@@ -61,10 +61,22 @@ def run_command(cmd, cwd=None):
 
 def main():
     if len(sys.argv) < 2:
-        print_korean("사용법: python publish_to_blog.py <마크다운_파일_경로>", "ERROR")
+        print_korean("사용법: python publish_to_blog.py <마크다운_파일_경로> [--slug <영문_슬러그>]", "ERROR")
         sys.exit(1)
         
-    src_path = os.path.abspath(sys.argv[1])
+    # 커맨드라인 인수 파싱
+    src_path_raw = sys.argv[1]
+    passed_slug = None
+    
+    if "--slug" in sys.argv:
+        try:
+            slug_idx = sys.argv.index("--slug")
+            passed_slug = sys.argv[slug_idx + 1]
+        except IndexError:
+            print_korean("--slug 뒤에 슬러그 값을 지정해야 합니다.", "ERROR")
+            sys.exit(1)
+        
+    src_path = os.path.abspath(src_path_raw)
     if not os.path.exists(src_path):
         print_korean(f"파일을 찾을 수 없습니다: {src_path}", "ERROR")
         sys.exit(1)
@@ -86,7 +98,21 @@ def main():
         print_korean(f"Front matter에서 날짜(date)를 찾지 못해 오늘 날짜로 설정합니다: {date_str}")
         
     # 2. 저장용 파일명 결정 (YYYY-MM-DD-slug.md)
-    slug = make_slug(title)
+    if passed_slug:
+        slug = passed_slug.strip().lower()
+        print_korean(f"전달받은 영문 슬러그를 사용합니다: {slug}")
+    else:
+        slug = make_slug(title)
+        
+    # 폴백 안전장치: 슬러그에 한글이나 허용되지 않은 문자가 있다면 깨짐 방지를 위해 clean한 영문/숫자 슬러그로 강제 대체
+    if re.search(r'[^a-z0-9-]', slug):
+        clean_slug = re.sub(r'[^a-z0-9-]', '', slug.encode('ascii', 'ignore').decode('ascii'))
+        clean_slug = re.sub(r'-+', '-', clean_slug).strip('-')
+        if not clean_slug:
+            clean_slug = f"post-{date_str}"
+        print_korean(f"경고: 슬러그에 비영문 문자({slug})가 포함되어 있어 깨짐 방지를 위해 안전한 슬러그({clean_slug})로 자동 전환합니다.", "INFO")
+        slug = clean_slug
+
     new_filename = f"{date_str}-{slug}.md"
     
     # 블로그 루트 경로 확인 (_posts 폴더 위치)

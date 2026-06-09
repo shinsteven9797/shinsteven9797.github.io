@@ -100,6 +100,24 @@ def parse_tags_from_frontmatter(content: str) -> list[str]:
                 for l in m.group(1).splitlines() if l.strip()]
     return []
 
+def parse_title_from_frontmatter(content: str, default_val: str) -> str:
+    """frontmatter의 title 추출."""
+    fm = re.match(r"^---\s*\n(.*?)\n---\s*\n", content, re.DOTALL)
+    if not fm:
+        return default_val
+    fm_body = fm.group(1)
+    m = re.search(r"^title:\s*(.*)", fm_body, re.MULTILINE)
+    if m:
+        return m.group(1).strip().strip("\"'")
+    return default_val
+
+def suggest_slug(title: str) -> str:
+    """제목을 바탕으로 깨끗한 영문 슬러그를 제안."""
+    # 알파벳, 숫자, 띄어쓰기, 하이픈만 보존
+    s = re.sub(r'[^a-zA-Z0-9\s-]', '', title).strip().lower()
+    s = re.sub(r'[\s-]+', '-', s)
+    return s
+
 def update_frontmatter_tags(content: str, all_tags: list[str]) -> str:
     """frontmatter의 tags 필드를 인라인 배열 형식으로 갱신 (없으면 추가)."""
     if not all_tags:
@@ -237,15 +255,16 @@ def _call_api(session, key: str, chunk: str) -> list[dict]:
         ]
     return _parse_html_errors(result.get("origin_html", ""), result.get("html", ""))
 
-def check_spelling(text: str) -> tuple[list[dict], str | None]:
+def check_spelling(text: str) -> tuple[list[dict], str | None, bool]:
+    is_truncated = len(text) > MAX_CHARS
     text = text[:MAX_CHARS]
     chunks = [text[i:i + CHUNK_SIZE] for i in range(0, len(text), CHUNK_SIZE)]
     try:
         session, key = _get_session()
     except Exception as e:
-        return [], f"세션 초기화 실패: {e}"
+        return [], f"세션 초기화 실패: {e}", is_truncated
     if not key:
-        return [], "passportKey를 가져올 수 없습니다. 인터넷 연결을 확인하세요."
+        return [], "passportKey를 가져올 수 없습니다. 인터넷 연결을 확인하세요.", is_truncated
     errors = []
     for i, chunk in enumerate(chunks):
         if not chunk.strip():
@@ -255,8 +274,8 @@ def check_spelling(text: str) -> tuple[list[dict], str | None]:
             if i < len(chunks) - 1:
                 time.sleep(0.4)
         except Exception as e:
-            return errors, f"API 오류 (청크 {i+1}): {e}"
-    return errors, None
+            return errors, f"API 오류 (청크 {i+1}): {e}", is_truncated
+    return errors, None, is_truncated
 
 # ── 파일 수정 ─────────────────────────────────────────────────────────────────
 
@@ -327,26 +346,28 @@ def show_main_window(
     api_err: str | None,
     current_tags: list[str],
     suggested_tags: list[str],
-) -> tuple[bool, list[dict], list[str]]:
+    is_truncated: bool,
+    default_slug: str,
+) -> tuple[bool, list[dict], list[str], str]:
     """
     결과 창 표시.
-    Returns (should_publish, selected_errors, final_tags)
+    Returns (should_publish, selected_errors, final_tags, slug)
     """
     root = tk.Tk()
     root.title("발행 전 검토")
-    root.minsize(680, 520)
+    root.minsize(680, 560)
     root.resizable(True, True)
     root.update_idletasks()
     sw, sh = root.winfo_screenwidth(), root.winfo_screenheight()
-    w, h = 760, 580
+    w, h = 760, 620
     root.geometry(f"{w}x{h}+{(sw-w)//2}+{(sh-h)//2}")
 
-    result: dict = {"publish": False, "sel_errors": [], "tags": current_tags[:]}
+    result: dict = {"publish": False, "sel_errors": [], "tags": current_tags[:], "slug": default_slug}
 
     # ── 헤더 ──────────────────────────────────────────────────────────────────
     hdr = tk.Frame(root, bg="#2c3e50", pady=8)
     hdr.pack(fill="x")
-    tk.Label(hdr, text=f"\U0001f4dd  {os.path.basename(file_path)}",
+    tk.Label(hdr, text=f"📝  {os.path.basename(file_path)}",
              fg="white", bg="#2c3e50", font=("Malgun Gothic", 11, "bold"),
              anchor="w", padx=12).pack(fill="x")
 
@@ -369,6 +390,13 @@ def show_main_window(
     bf.pack(fill="x")
     tk.Label(bf, text=b_text, fg="white", bg=b_bg,
              font=("Malgun Gothic", 10, "bold"), padx=12).pack(anchor="w")
+
+    # 3,000자 초과 시 경고 배너 표시
+    if is_truncated:
+        trunc_f = tk.Frame(root, bg="#d35400", pady=4)
+        trunc_f.pack(fill="x")
+        tk.Label(trunc_f, text="⚠️  [경고] 본문이 3,000자를 초과하여 3,000자 이후의 내용은 맞춤법 검사에서 제외되었습니다.",
+                 fg="white", bg="#d35400", font=("Malgun Gothic", 9, "bold"), padx=12).pack(anchor="w")
 
     # ── 탭 ────────────────────────────────────────────────────────────────────
     nb = ttk.Notebook(root)
@@ -502,6 +530,19 @@ def show_main_window(
     tk.Button(manual_frame, text="추가", font=("Malgun Gothic", 9),
               command=add_manual_tag).pack(side="left")
 
+    # ── 영문 URL 슬러그 (인코딩 깨짐 방지) ──────────────────────────────────────
+    ttk.Separator(tab_tags, orient="horizontal").pack(fill="x", pady=8)
+
+    tk.Label(tab_tags, text="영문 URL 슬러그 (인코딩 깨짐 방지용)", font=("Malgun Gothic", 9, "bold"), fg="#2c3e50").pack(anchor="w")
+    tk.Label(tab_tags, text="영어 소문자, 숫자, 하이픈(-)만 입력 가능합니다. (예: my-post-title)", font=("Malgun Gothic", 8), fg="#7f8c8d").pack(anchor="w")
+
+    slug_frame = tk.Frame(tab_tags, pady=4)
+    slug_frame.pack(fill="x")
+
+    slug_entry = tk.Entry(slug_frame, font=("Malgun Gothic", 9), width=40)
+    slug_entry.insert(0, default_slug)
+    slug_entry.pack(side="left", padx=(0, 6))
+
     # ── 하단 버튼 ──────────────────────────────────────────────────────────────
     btn_outer = tk.Frame(root, pady=10, padx=10)
     btn_outer.pack(fill="x")
@@ -516,9 +557,23 @@ def show_main_window(
         root.destroy()
 
     def on_publish():
-        # 선택된 교정 수집
+        # 3000글자 초과 시 최종 경고
+        if is_truncated:
+            ans = messagebox.askyesno("맞춤법 제한 확인", "본문이 3,000자를 초과하여 일부 맞춤법 검사가 누락되었습니다. 그래도 발행을 계속하시겠습니까?")
+            if not ans:
+                return
+
+        # 슬러그 유효성 검사
+        slug_val = slug_entry.get().strip().lower()
+        if not slug_val:
+            messagebox.showerror("오류", "영문 URL 슬러그는 반드시 입력해야 합니다.")
+            return
+        if re.search(r'[^a-z0-9-]', slug_val):
+            messagebox.showerror("오류", "슬러그에는 영어 소문자, 숫자, 하이픈(-)만 사용할 수 있습니다. (한글, 대문자, 특수문자 금지)")
+            return
+
+        result["slug"] = slug_val
         result["sel_errors"] = [e for e, v in zip(errors, err_vars) if v.get()]
-        # 최종 태그 = 현재 + 체크된 추천 + 직접 입력
         checked_sug = [t for t, v in sug_vars if v.get()]
         all_tags = list(dict.fromkeys(current_tags + checked_sug + manual_tags))
         result["tags"] = all_tags
@@ -537,7 +592,7 @@ def show_main_window(
     ).pack(side="right")
 
     root.mainloop()
-    return result["publish"], result["sel_errors"], result["tags"]
+    return result["publish"], result["sel_errors"], result["tags"], result["slug"]
 
 # ── 메인 ─────────────────────────────────────────────────────────────────────
 
@@ -555,19 +610,24 @@ def main():
     with open(file_path, encoding="utf-8") as f:
         raw_content = f.read()
 
-    # 2. 텍스트 추출 + 현재 태그 파싱
+    # 2. 텍스트 추출 + 현재 태그/제목 파싱
     text         = extract_text(file_path)
     current_tags = parse_tags_from_frontmatter(raw_content)
+    
+    # 기본 파일명을 백업 제목으로 지정
+    base_name    = os.path.splitext(os.path.basename(file_path))[0]
+    title        = parse_title_from_frontmatter(raw_content, base_name)
+    default_slug = suggest_slug(title)
 
     # 3. 맞춤법 검사
-    errors, api_err = check_spelling(text) if text else ([], "추출할 텍스트 없음")
+    errors, api_err, is_truncated = check_spelling(text) if text else ([], "추출할 텍스트 없음", False)
 
     # 4. 태그 추천
     suggested = suggest_tags(text, current_tags)
 
     # 5. GUI 표시 → 사용자 결정
-    should_publish, sel_errors, final_tags = show_main_window(
-        file_path, errors, api_err, current_tags, suggested
+    should_publish, sel_errors, final_tags, final_slug = show_main_window(
+        file_path, errors, api_err, current_tags, suggested, is_truncated, default_slug
     )
 
     if not should_publish:
@@ -579,8 +639,8 @@ def main():
     print(f"[수정] 교정 {len(sel_errors)}건 적용, 태그: {final_tags}")
 
     # 7. 블로그 발행
-    print(f"[발행] {file_path}")
-    ret = subprocess.run([sys.executable, PUBLISH_SCRIPT, file_path], text=True)
+    print(f"[발행] {file_path} (슬러그: {final_slug})")
+    ret = subprocess.run([sys.executable, PUBLISH_SCRIPT, file_path, "--slug", final_slug], text=True)
     sys.exit(ret.returncode)
 
 
