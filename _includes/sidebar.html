@@ -36,14 +36,14 @@
         {% endunless %}
       {% endfor %}
       
-      <!-- search input (replacing ABOUT) -->
+      <!-- search input (replacing ABOUT - 격리된 ID 사용하여 테마 JS 크래시 방지) -->
       <li class="nav-item w-100" style="margin-top: 0.6rem !important; padding: 0 0.5rem !important;">
-        <div id="search-container" class="w-100" style="position: relative;">
+        <div id="custom-search-container" class="w-100" style="position: relative;">
           <span style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--text-muted-color); font-size: 0.75rem; z-index: 10; pointer-events: none;">
             <i class="fas fa-search"></i>
           </span>
           <input
-            id="search-input"
+            id="custom-search-input"
             type="search"
             class="form-control"
             placeholder="SEARCH..."
@@ -52,21 +52,21 @@
           >
         </div>
         
-        <!-- Search Results Wrapper (to prevent JS init errors and show results within sidebar) -->
-        <div id="search-result-wrapper" class="d-none w-100 mt-2" style="position: static !important; background: var(--btn-hover-bg) !important; border: 1px solid var(--btn-border-color) !important; border-radius: 6px !important; padding: 0.5rem !important; max-height: 250px !important; overflow-y: auto !important; box-shadow: none !important; z-index: 99 !important;">
-          <div id="search-hints" class="d-none"></div>
-          <div id="search-results" class="d-flex flex-column gap-1" style="font-size: 0.8rem !important; line-height: 1.4 !important;"></div>
+        <!-- Custom Search Results Wrapper (Chirpy CSS/JS 오염 방지를 위해 커스텀 ID 격리 적용) -->
+        <div id="custom-search-result-wrapper" class="d-none w-100 mt-2" style="position: static !important; background: var(--btn-hover-bg) !important; border: 1px solid var(--btn-border-color) !important; border-radius: 6px !important; padding: 0.5rem !important; max-height: 250px !important; overflow-y: auto !important; box-shadow: none !important; z-index: 99 !important;">
+          <div id="custom-search-results" class="d-flex flex-column gap-1" style="font-size: 0.8rem !important; line-height: 1.4 !important;"></div>
         </div>
       </li>
     </ul>
   </nav>
 
+  <!-- 테두리 깨짐 방지를 위해 부트스트랩 클래스를 제거하고 완벽히 격리된 커스텀 DIV 렌더링 적용 -->
   <div class="sidebar-bottom d-flex flex-wrap align-items-center justify-content-start w-100">
     {% unless site.theme_mode %}
-      <button type="button" class="btn btn-link nav-link" aria-label="Switch Mode" id="custom-theme-toggle" style="position: relative !important; z-index: 9999 !important; pointer-events: auto !important; cursor: pointer !important; text-decoration: none !important;">
+      <div id="custom-theme-toggle" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.45rem 0.75rem; border: 1px solid var(--btn-border-color); border-radius: 6px; background: var(--btn-hover-bg); color: var(--text-color); font-family: var(--font-heading); font-size: 0.78rem; font-weight: 700; cursor: pointer; user-select: none; transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease; position: relative !important; z-index: 9999 !important; pointer-events: auto !important; overflow: hidden;">
         <i id="theme-toggle-icon" class="fas fa-sun"></i>
         <span id="theme-toggle-text">LIGHT</span>
-      </button>
+      </div>
     {% endunless %}
   </div>
   <!-- .sidebar-bottom -->
@@ -81,7 +81,7 @@
 <!-- #sidebar -->
 
 <script>
-  // ── 1. 수동 테마 토글 엔진 (물리적 클릭 유효성 보장) ─────────────────────────────────
+  // ── 1. 테마 토글 제어 엔진 (Chirpy 빌트인 Theme 클래스 직접 연동) ──────────────────
   (function() {
     const toggleBtn = document.getElementById('custom-theme-toggle');
     const icon = document.getElementById('theme-toggle-icon');
@@ -99,41 +99,64 @@
       }
     }
 
-    function applyThemeMode(mode) {
-      console.log("[ThemeToggle] Applying mode:", mode);
-      document.documentElement.setAttribute('data-mode', mode);
-      localStorage.setItem('mode', mode);
-      localStorage.setItem('theme', mode);
-      updateToggleUI(mode);
-      window.dispatchEvent(new Event('theme-change'));
-      console.log("[ThemeToggle] Current HTML data-mode:", document.documentElement.getAttribute('data-mode'));
+    // 테마 동기화 함수
+    function syncTheme() {
+      if (typeof Theme !== 'undefined' && Theme.visualState) {
+        updateToggleUI(Theme.visualState);
+      } else {
+        const storedMode = localStorage.getItem('mode') || document.documentElement.getAttribute('data-mode') || 'light';
+        updateToggleUI(storedMode);
+      }
     }
 
-    // 페이지 로드 시 즉시 초기 테마 로드
-    const storedMode = localStorage.getItem('mode') || document.documentElement.getAttribute('data-mode') || 'light';
-    console.log("[ThemeToggle] Initial storedMode:", storedMode);
-    applyThemeMode(storedMode);
+    // 초기 로딩 시 동기화
+    syncTheme();
 
     if (toggleBtn) {
-      console.log("[ThemeToggle] Button found, attaching click listener");
+      // 호버 모션 강제 보장 (부트스트랩 오염 방지)
+      toggleBtn.addEventListener('mouseenter', () => {
+        toggleBtn.style.background = 'var(--accent-glow)';
+        toggleBtn.style.borderColor = 'var(--accent)';
+        toggleBtn.style.color = 'var(--accent)';
+      });
+      toggleBtn.addEventListener('mouseleave', () => {
+        toggleBtn.style.background = 'var(--btn-hover-bg)';
+        toggleBtn.style.borderColor = 'var(--btn-border-color)';
+        toggleBtn.style.color = 'var(--text-color)';
+      });
+
+      // 테마 모드 전환 클릭 바인딩
       toggleBtn.addEventListener('click', function(e) {
-        console.log("[ThemeToggle] Button clicked!");
         e.preventDefault();
         e.stopPropagation();
-        const currentMode = document.documentElement.getAttribute('data-mode') || 'light';
-        const newMode = currentMode === 'dark' ? 'light' : 'dark';
-        applyThemeMode(newMode);
+        
+        if (typeof Theme !== 'undefined' && typeof Theme.flip === 'function') {
+          // Chirpy 오리지널 테마 토글 API 호출
+          Theme.flip();
+          updateToggleUI(Theme.visualState);
+        } else {
+          // Fallback
+          const currentMode = document.documentElement.getAttribute('data-mode') || 'light';
+          const newMode = currentMode === 'dark' ? 'light' : 'dark';
+          document.documentElement.setAttribute('data-mode', newMode);
+          localStorage.setItem('mode', newMode);
+          localStorage.setItem('theme', newMode);
+          updateToggleUI(newMode);
+          window.dispatchEvent(new Event('theme-change'));
+        }
       });
-    } else {
-      console.error("[ThemeToggle] Button #custom-theme-toggle NOT found in DOM");
     }
+
+    // 외부 스크립트에 의한 테마 변화 감지 후 UI 일치
+    window.addEventListener('theme-change', syncTheme);
+    window.addEventListener('load', syncTheme);
   })();
 
-  // ── 2. 경량 바닐라 JS 검색 엔진 (탑바 삭제에 따른 JS 크래시 우회) ───────────────────
+  // ── 2. 경량 바닐라 JS 검색 엔진 (격리된 ID를 활용한 충돌 회피) ───────────────────────
   (function() {
-    const searchInput = document.getElementById('search-input');
-    const resultWrapper = document.getElementById('search-result-wrapper');
-    const resultsContainer = document.getElementById('search-results');
+    const searchInput = document.getElementById('custom-search-input');
+    const resultWrapper = document.getElementById('custom-search-result-wrapper');
+    const resultsContainer = document.getElementById('custom-search-results');
     let searchData = null;
 
     async function initSearch() {
@@ -142,7 +165,7 @@
         const resp = await fetch('{{ "/assets/js/data/search.json" | relative_url }}');
         searchData = await resp.json();
       } catch (err) {
-        console.error('Failed to load search data:', err);
+        console.error('[CustomSearch] Failed to load search data:', err);
       }
     }
 
@@ -161,7 +184,7 @@
         const matched = searchData.filter(post => 
           post.title.toLowerCase().includes(query) || 
           post.content.toLowerCase().includes(query)
-        ).slice(0, 5); // 최대 5개 노출
+        ).slice(0, 5);
 
         if (matched.length === 0) {
           resultsContainer.innerHTML = '<div class="text-muted p-2" style="font-size: 0.75rem;">검색 결과가 없습니다.</div>';
