@@ -481,23 +481,16 @@ strong, b {
    10. 전체 화이트/다크 톤 및 뷰 일관성 (Inconsistency Cleanup)
    ───────────────────────────────────────────────────────────────────────── */
 /* 푸터 영역 완전히 숨김 처리 (기본 테마 푸터 숨김) */
-#footer, 
+#footer,
 .footer-wrapper,
 #tail-wrapper {
   display: none !important;
 }
 
-/* ─────────────────────────────────────────────────────────────────────────
-   10. 전체 화이트/다크 톤 및 뷰 일관성 (Inconsistency Cleanup)
-   ───────────────────────────────────────────────────────────────────────── */
-/* 푸터 영역 완전히 숨김 처리 (기본 테마 푸터 숨김) */
-#footer, 
-.footer-wrapper,
-#tail-wrapper {
-  display: none !important;
-}
-
-/* 검색창 배경 및 텍스트 톤 통일 */
+/* 검색창 배경 및 텍스트 톤 통일 (custom-search-input + 레거시 search-input 동시 지원) */
+#custom-search-input,
+#custom-search-container,
+#custom-search-result-wrapper,
 #search-input,
 #search-container,
 #search-wrapper {
@@ -506,8 +499,11 @@ strong, b {
   color: var(--text-color) !important;
 }
 
+/* placeholder 색상: 다크/라이트 모드 전환 시 자동 반영 */
+#custom-search-input::placeholder,
 #search-input::placeholder {
   color: var(--text-muted-color) !important;
+  opacity: 1 !important; /* Firefox placeholder opacity 초기화 */
 }
 
 /* 모바일 메뉴바 배경 톤 통일 */

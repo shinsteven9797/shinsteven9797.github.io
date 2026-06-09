@@ -100,17 +100,24 @@
     }
 
     // 테마 동기화 함수
+    // 우선순위: Theme API(Chirpy) > localStorage > data-mode 속성 > 시스템 preference > 'light'
     function syncTheme() {
       if (typeof Theme !== 'undefined' && Theme.visualState) {
         updateToggleUI(Theme.visualState);
       } else {
-        const storedMode = localStorage.getItem('mode') || document.documentElement.getAttribute('data-mode') || 'light';
+        const storedMode = localStorage.getItem('mode')
+          || document.documentElement.getAttribute('data-mode')
+          || (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
         updateToggleUI(storedMode);
       }
     }
 
     // 초기 로딩 시 동기화
     syncTheme();
+
+    // Chirpy JS가 나중에 data-mode를 설정할 경우를 대비해 MutationObserver로 감지
+    const _modeObserver = new MutationObserver(() => syncTheme());
+    _modeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-mode'] });
 
     if (toggleBtn) {
       // 호버 모션 강제 보장 (부트스트랩 오염 방지)
