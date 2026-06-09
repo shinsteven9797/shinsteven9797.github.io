@@ -100,25 +100,32 @@
     }
 
     function applyThemeMode(mode) {
+      console.log("[ThemeToggle] Applying mode:", mode);
       document.documentElement.setAttribute('data-mode', mode);
       localStorage.setItem('mode', mode);
       localStorage.setItem('theme', mode);
       updateToggleUI(mode);
       window.dispatchEvent(new Event('theme-change'));
+      console.log("[ThemeToggle] Current HTML data-mode:", document.documentElement.getAttribute('data-mode'));
     }
 
     // 페이지 로드 시 즉시 초기 테마 로드
     const storedMode = localStorage.getItem('mode') || document.documentElement.getAttribute('data-mode') || 'light';
+    console.log("[ThemeToggle] Initial storedMode:", storedMode);
     applyThemeMode(storedMode);
 
     if (toggleBtn) {
+      console.log("[ThemeToggle] Button found, attaching click listener");
       toggleBtn.addEventListener('click', function(e) {
+        console.log("[ThemeToggle] Button clicked!");
         e.preventDefault();
         e.stopPropagation();
         const currentMode = document.documentElement.getAttribute('data-mode') || 'light';
         const newMode = currentMode === 'dark' ? 'light' : 'dark';
         applyThemeMode(newMode);
       });
+    } else {
+      console.error("[ThemeToggle] Button #custom-theme-toggle NOT found in DOM");
     }
   })();
 
